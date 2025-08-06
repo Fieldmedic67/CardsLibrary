@@ -1,18 +1,18 @@
 import { Outlet } from "react-router-dom";
 import ProfileForm from "./pages/ProfileForm.jsx";
 import React, {useState} from "react";
-import UserProfileContext from "./context/UserProfileContext.jsx";
+import UserProfileContext from "./context/UserNameContext.jsx";
 import UserPictureContext from "./context/UserPictureContext.jsx";
 
 export function Layout() {
 
-    const [userProfile, setUserProfile ] = useState({userName : 'default'});
-    const [userPicture, setUserPicture] = useState({userPicture: 'pretty picture'})
+    const [userName, setUserName] = useState('default');
+    const [userPicture, setUserPicture] = useState("https://static1.thegamerimages.com/wordpress/wp-content/uploads/2022/01/Anime.png")
 
     return (
     <div>
         <>
-            <UserProfileContext.Provider value={{ userProfile, setUserProfile }}>
+            <UserProfileContext.Provider value={{ userName, setUserName }}>
             <UserPictureContext.Provider value={{ userPicture, setUserPicture}}>
                 <Outlet />
             </UserPictureContext.Provider>
