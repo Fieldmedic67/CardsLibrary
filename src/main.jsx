@@ -5,6 +5,7 @@ import Home from "./pages/Home.jsx"
 import TwoThreeSevenTen from "./pages/TwoThreeSevenTen.jsx"
 import './styles.css'
 import { Layout } from './Layout.jsx'
+import ProfileForm from "./pages/ProfileForm.jsx";
 
 function App() {
 
@@ -12,7 +13,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />} >
-          <Route index element={<Home />} />
+            <Route index element={<ProfileForm />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/two-three-seven-ten" element={<TwoThreeSevenTen />} /> 
         </Route>
       </Routes>
