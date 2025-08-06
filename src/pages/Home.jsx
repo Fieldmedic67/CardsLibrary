@@ -14,7 +14,7 @@ const Home = () => {
                 </div>
             </Link>
 
-            <Link to="./texas-hold-em">
+            <Link to="./war">
                 <div className="texas-hold-em">
                     <img src="https://deckofcardsapi.com/static/img/AH.png" id="aceOfHearts" />
                     <img src="https://deckofcardsapi.com/static/img/KH.png" id="kingOfHearts" />
