@@ -1,16 +1,20 @@
 import React, {useState, useContext} from 'react'
 import { Link } from 'react-router-dom'
-import ProfileForm from "./ProfileForm.jsx";
 import UserProfileContext from "../context/UserProfileContext.jsx";
+import UserPictureContext from "../context/UserPictureContext.jsx";
 
 
 const Home = () => {
 
     const { userProfile } = useContext(UserProfileContext);
+    const { userPicture } = useContext(UserPictureContext);
 
     return (
         <>
+            <div>
             <h1>Hello! {userProfile.userName}</h1>
+            <img src = {userPicture} alt = 'pretty picture'></img>
+            </div>
             <div className="select-game">
                 <h1>Please Select a Game</h1>
 
