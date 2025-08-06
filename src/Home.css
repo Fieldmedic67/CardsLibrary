@@ -1,0 +1,113 @@
+.select-game{
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding-left: 100px;
+  position: relative;
+}
+
+h1 {
+  padding: 1rem;
+  position: relative;
+}
+
+
+.two-three-seven-ten {
+  display: flex;
+  position: relative;
+  width: 300px;
+  height: 100px;
+}
+.two-three-seven-ten:hover img {
+  transform: scale(1.1) rotate(2deg);
+  transition: transform 0.5s ease;
+}
+
+
+#two {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: auto;
+}
+
+#three {
+  position: absolute;
+  top: 20px;    
+  left: 30px;
+  width: 50%;
+  height: auto;
+}
+
+#seven {
+  position: absolute;
+  top: 40px;    
+  left: 60px;
+  width: 50%;
+  height: auto;
+}
+
+#ten {
+  position: absolute;
+  top: 60px; 
+  left: 90px;
+  width: 50%;
+  height: auto;
+}
+
+
+
+.texas-hold-em {
+  display: flex;
+  position: relative;
+  top:-100px;
+  left: 300px;
+  width: 300px;
+  height: 100px;
+}
+.texas-hold-em:hover img {
+  transform: scale(1.1) rotate(2deg);
+  transition: transform 0.5s ease;
+}
+
+
+#aceOfHearts {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 50%;
+  height: auto;
+}
+
+#kingOfHearts {
+  position: absolute;
+  top: 20px;   
+  left: 30px;
+  width: 50%;
+  height: auto;
+}
+
+#queenOfHearts {
+  position: absolute;
+  top: 40px;   
+  left: 60px;
+  width: 50%;
+  height: auto;
+}
+
+#jackOfHearts {
+  position: absolute;
+  top: 60px; 
+  left: 90px;
+  width: 50%;
+  height: auto;
+}
+
+#tenOfHearts {
+  position: absolute;
+  top: 80px; 
+  left: 120px;
+  width: 50%;
+  height: auto;
+}

@@ -1,0 +1,70 @@
+.p1FaceUp {
+    display: flex;
+    position: absolute;
+    top: 680px;
+    width: 250px;
+    height: 250px;
+    left:200px;
+}
+
+.p1FaceDown {
+    display: flex;
+    position: absolute;
+    top: 700px;
+    width: 250px;
+    height: 250px;
+    left:200px;
+}
+.p1Hand {
+    display: flex;
+    position: absolute;
+    top: 680px;
+    width: 250px;
+    height: 250px;
+    left: 900px;
+}
+
+.p2FaceDown {
+    display: flex;
+    position:absolute;
+    top: 0px;
+    width: 250px;
+    height: 250px;
+    left:200px;
+}
+
+.p2FaceUp {
+    display: flex;
+    position:absolute;
+    top: 20px;
+    width: 250px;
+    height: 250px;
+    left:200px;
+}
+
+.p2Hand {
+    display: flex;
+    position:absolute;
+    top: 20px;
+    width: 250px;
+    height: 250px;
+    left:900px;
+}
+
+.drawPile {
+    display: flex;
+    position: absolute;
+    top: 325px;
+    width: 250px;
+    height: 250px;
+    left:375px;
+}
+
+.discardPile {
+    display: flex;
+    position: absolute;
+    top: 325px;
+    width: 250px;
+    height: 250px;
+    left:575px;
+}
