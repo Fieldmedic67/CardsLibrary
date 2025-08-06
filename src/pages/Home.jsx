@@ -1,13 +1,16 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import ProfileForm from "./ProfileForm.jsx";
+import UserProfileContext from "../context/UserProfileContext.jsx";
+
+
 const Home = () => {
 
-const [userProfile, setUserProfile ] = useState({userName : 'default', picture : null});
+    const { userProfile } = useContext(UserProfileContext);
 
     return (
         <>
-
+            <h1>Hello! {userProfile.userName}</h1>
             <div className="select-game">
                 <h1>Please Select a Game</h1>
 
