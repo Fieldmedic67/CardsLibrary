@@ -1,18 +1,18 @@
 import React, {useState, useContext} from 'react'
 import { Link } from 'react-router-dom'
-import UserProfileContext from "../context/UserProfileContext.jsx";
+import UserNameContext from "../context/UserNameContext.jsx";
 import UserPictureContext from "../context/UserPictureContext.jsx";
 
 
 const Home = () => {
 
-    const { userProfile } = useContext(UserProfileContext);
+    const { userName } = useContext(UserNameContext);
     const { userPicture } = useContext(UserPictureContext);
 
     return (
         <>
             <div>
-            <h1>Hello! {userProfile.userName}</h1>
+            <h1>Hello! {userName}</h1>
             <img src = {userPicture} alt = 'pretty picture'></img>
             </div>
             <div className="select-game">
@@ -84,4 +84,4 @@ export default Home;
 // pointValue + 160
 //
 // Royal Flush: Ace, King, Queen, Jack, Ten, all of the same suit.
-// 180 test test
+// 180

@@ -1,12 +1,12 @@
 import {useState, useContext, use} from 'react';
 import { useNavigate } from 'react-router-dom'
-import userProfileContext from "../context/UserProfileContext.jsx";
-import userPictureContext from "../context/UserProfileContext.jsx";
+import userNameContext from "../context/UserNameContext.jsx";
+import userPictureContext from "../context/UserPictureContext.jsx";
 
 
 export default function ProfileForm() {
 
-    const { setUserProfile } = useContext(userProfileContext)
+    const { setUserName } = useContext(userNameContext)
     const { setUserPicture } = useContext(userPictureContext)
     const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export default function ProfileForm() {
 
         navigate('/home')
         // localStorage.setItem('userProfile', JSON.stringify(userProfile))
-        setUserProfile({ userName: event.target[0].value});
+        setUserName(event.target[0].value);
     }
 
     function handleFileChange(event) {
