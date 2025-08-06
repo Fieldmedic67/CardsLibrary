@@ -84,4 +84,4 @@ export default Home;
 // pointValue + 160
 //
 // Royal Flush: Ace, King, Queen, Jack, Ten, all of the same suit.
-// 180
+// 180 test test
