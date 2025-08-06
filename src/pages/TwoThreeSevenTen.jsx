@@ -72,7 +72,7 @@ const TwoThreeSevenTen = () => {
 
     return (
         <div>
-            <button onClick={NewGame}>New Game</button>
+            <button className="p-3 bg-green-300 rounded-full" onClick={NewGame}>New Game</button>
 
             <div className="p1FaceDown"> {p1FaceDown.length > 0 && p1FaceDown.map((card, index) => (
                 <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`} onClick={() => Player1PlayFaceDown(index)} />))}
