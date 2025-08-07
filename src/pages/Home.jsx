@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import UserNameContext from "../context/UserNameContext.jsx";
 import UserPictureContext from "../context/UserPictureContext.jsx";
@@ -12,33 +12,32 @@ const Home = () => {
     return (
         <>
             <div>
-              <h1>Hello! {userName}</h1>
-              <img src={userPicture} alt='pretty picture'></img>
-              </div>
-              <div className="select-game">
-                  <h1>Please Select a Game</h1>
-
-                  <Link to="./two-three-seven-ten">
-                      <div className="two-three-seven-ten">
-                          <img src="https://deckofcardsapi.com/static/img/2H.png" id="two" />
-                          <img src="https://deckofcardsapi.com/static/img/3C.png" id="three" />
-                          <img src="https://deckofcardsapi.com/static/img/7D.png" id="seven" />
-                          <img src="https://deckofcardsapi.com/static/img/0S.png" id="ten" />
-                      </div>
-                  </Link>
-
-                  <Link to="./war">
-                      <div className="texas-hold-em">
-                          <img src="https://deckofcardsapi.com/static/img/AH.png" id="aceOfHearts" />
-                          <img src="https://deckofcardsapi.com/static/img/KH.png" id="kingOfHearts" />
-                          <img src="https://deckofcardsapi.com/static/img/QH.png" id="queenOfHearts" />
-                          <img src="https://deckofcardsapi.com/static/img/JH.png" id="jackOfHearts" />
-                          <img src="https://deckofcardsapi.com/static/img/0H.png" id="tenOfHearts" />
-                      </div>
-                  </Link>
+                <h1>Hello! {userName}</h1>
+                <img src={userPicture} alt='pretty picture'></img>
             </div>
-      </div>
-    </>
+            <div className="select-game">
+                <h1>Please Select a Game</h1>
+
+                <Link to="./two-three-seven-ten">
+                    <div className="two-three-seven-ten">
+                        <img src="https://deckofcardsapi.com/static/img/2H.png" id="two" />
+                        <img src="https://deckofcardsapi.com/static/img/3C.png" id="three" />
+                        <img src="https://deckofcardsapi.com/static/img/7D.png" id="seven" />
+                        <img src="https://deckofcardsapi.com/static/img/0S.png" id="ten" />
+                    </div>
+                </Link>
+
+                <Link to="../war">
+                    <div className="texas-hold-em">
+                        <img src="https://deckofcardsapi.com/static/img/AH.png" id="aceOfHearts" />
+                        <img src="https://deckofcardsapi.com/static/img/KH.png" id="kingOfHearts" />
+                        <img src="https://deckofcardsapi.com/static/img/QH.png" id="queenOfHearts" />
+                        <img src="https://deckofcardsapi.com/static/img/JH.png" id="jackOfHearts" />
+                        <img src="https://deckofcardsapi.com/static/img/0H.png" id="tenOfHearts" />
+                    </div>
+                </Link>
+            </div>
+        </>
     )
 }
 export default Home;

@@ -17,7 +17,7 @@ function App() {
           <Route path="war" element={<War />} /> 
           <Route path="war/:sessionId" element={<War />} />
           <Route index element={<ProfileForm />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="home" element={<Home />} />
         </Route>
       </Routes>
     </Router>
