@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import UserNameContext from "../context/UserNameContext.jsx";
 import UserPictureContext from "../context/UserPictureContext.jsx";
@@ -11,9 +11,10 @@ const Home = () => {
 
     return (
         <>
-            <div>
-            <h1>Hello! {userName}</h1>
-            <img src={userPicture} alt='pretty picture'></img>
+        <div className="text-xl font-bold mt-2 text-center font-mono">
+            <div className="flex items-center justify-center gap-4 mb-6">
+                <h4>Waddup {userName || "Playa"} </h4>
+                <img src={userPicture} alt='pretty picture' className = "w-20 h-20 rounded-full object-cover border-2 border-transparent"></img>
             </div>
             <div className="select-game">
                 <h1>Please Select a Game</h1>
@@ -27,7 +28,7 @@ const Home = () => {
                     </div>
                 </Link>
 
-                <Link to="./texas-hold-em">
+                <Link to="../war">
                     <div className="texas-hold-em">
                         <img src="https://deckofcardsapi.com/static/img/AH.png" id="aceOfHearts" />
                         <img src="https://deckofcardsapi.com/static/img/KH.png" id="kingOfHearts" />
@@ -37,8 +38,8 @@ const Home = () => {
                     </div>
                 </Link>
             </div>
+        </div>
         </>
-
     )
 }
 export default Home;
