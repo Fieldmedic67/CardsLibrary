@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import UserNameContext from "../context/UserNameContext.jsx";
 import UserPictureContext from "../context/UserPictureContext.jsx";
-
+import ProfileHeader from "./ProfileHeader.jsx";
 
 const Home = () => {
 
@@ -15,12 +15,10 @@ const Home = () => {
     return (
         <>
         <div className="text-xl font-bold mt-2 text-center font-mono">
-            <div className="flex items-center justify-center gap-4 mb-6">
-                <h4>Waddup {userName || "Playa"} </h4>
-                <img src={userPicture} alt='pretty picture' className = "w-20 h-20 rounded-full object-cover border-2 border-transparent"></img>
-            </div>
+            <ProfileHeader />
+
             <div className="select-game">
-                <h1>Please Select a Game</h1>
+                <h1 className="block mb-6 text-gray-600 text-2xl">Please Select a Game</h1>
 
                 <Link to="../two-three-seven-ten">
                     <div className="two-three-seven-ten">
