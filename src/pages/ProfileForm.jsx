@@ -2,20 +2,21 @@ import { useState, useContext, use } from 'react';
 import { useNavigate } from 'react-router-dom'
 import userNameContext from "../context/UserNameContext.jsx";
 import userPictureContext from "../context/UserPictureContext.jsx";
+import avatar1 from "../assets/avatar1.jpg"
+import avatar2 from "../assets/avatar2.jpg"
+import avatar3 from "../assets/avatar3.jpg"
+import avatar4 from "../assets/avatar4.jpg"
+import avatar5 from "../assets/avatar5.jpg"
+import avatar6 from "../assets/avatar6.jpg"
 
 
 export default function ProfileForm() {
-
+    const [pictureRing, setPictureRing] = useState()
     const { setUserName } = useContext(userNameContext);
     const { setUserPicture } = useContext(userPictureContext);
     const navigate = useNavigate();
     const gamerPics = [
-        "https://i.pinimg.com/736x/81/7e/31/817e31e32b2f2fefa062da3ba7bc6a9b.jpg",
-        "https://i.pinimg.com/236x/7a/8b/ea/7a8bea29793d95b978244c46165ed567.jpg",
-        "https://wallpapers.com/images/hd/xbox-360-profile-pictures-5tsfsz64h3jkz31g.jpg",
-        "https://i.pinimg.com/originals/cf/3d/5b/cf3d5bdf61a0db1d65d88517555f4cee.jpg",
-        "https://wallpapers.com/images/hd/xbox-360-profile-pictures-lhsi6jgychy82r61.jpg",
-        "https://ih1.redbubble.net/image.820767998.6979/flat,800x800,075,f.u1.jpg",
+        avatar1, avatar2, avatar3, avatar4, avatar5, avatar6
     ];
 
     function handleSubmit(event) {

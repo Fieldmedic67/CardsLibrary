@@ -11,8 +11,9 @@ const Home = () => {
 
     return (
         <>
-            <div>
-                <h1>Hello! {userName}</h1>
+        <div className="text-xl font-bold mt-2 text-center font-mono">
+            <div className="flex items-center justify-center gap-4 mb-6">
+                <h4>Waddup {userName || "Playa"} </h4>
                 <img src={userPicture} alt='pretty picture' className = "w-20 h-20 rounded-full object-cover border-2 border-transparent"></img>
             </div>
             <div className="select-game">
@@ -37,6 +38,7 @@ const Home = () => {
                     </div>
                 </Link>
             </div>
+        </div>
         </>
     )
 }
