@@ -13,7 +13,7 @@ const Home = () => {
         <>
             <div>
                 <h1>Hello! {userName}</h1>
-                <img src={userPicture} alt='pretty picture'></img>
+                <img src={userPicture} alt='pretty picture' className = "w-20 h-20 rounded-full object-cover border-2 border-transparent"></img>
             </div>
             <div className="select-game">
                 <h1>Please Select a Game</h1>
