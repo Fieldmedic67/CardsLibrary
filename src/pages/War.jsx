@@ -4,6 +4,10 @@ import { useParams } from "react-router-dom";
 
 
 export function War() {
+
+    const userName = JSON.parse(localStorage.getItem('userName'))
+    const userPicture = JSON.parse(localStorage.getItem('userPicture'))
+
     const { sessionId } = useParams();
     const [deckId, setDeckId] = useState();
     const [cards, setCards] = useState([]);

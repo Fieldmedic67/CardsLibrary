@@ -6,8 +6,11 @@ import UserPictureContext from "../context/UserPictureContext.jsx";
 
 const Home = () => {
 
-    const { userName } = useContext(UserNameContext);
-    const { userPicture } = useContext(UserPictureContext);
+    // const { userName } = useContext(UserNameContext);
+    // const { userPicture } = useContext(UserPictureContext);
+
+    const userName = JSON.parse(localStorage.getItem('userName'))
+    const userPicture = JSON.parse(localStorage.getItem('userPicture'))
 
     return (
         <>

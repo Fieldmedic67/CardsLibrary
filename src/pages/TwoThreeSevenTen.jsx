@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import "./TwoThreeSevenTen.css";
 
 const TwoThreeSevenTen = () => {
+
+    const userName = JSON.parse(localStorage.getItem('userName'))
+    const userPicture = JSON.parse(localStorage.getItem('userPicture'))
+
     const [deckID, setDeckID] = useState();
+
+
 
     // Player 1 cards
     const [p1Hand, setP1Hand] = useState([]);

@@ -12,7 +12,7 @@ import avatar6 from "../assets/avatar6.jpg"
 
 export default function ProfileForm() {
     const [pictureRing, setPictureRing] = useState()
-    const {userName, setUserName} = useContext(userNameContext);
+    const { setUserName } = useContext(userNameContext);
     const { userPicture, setUserPicture} = useContext(userPictureContext);
     const navigate = useNavigate();
     const gamerPics = [
@@ -31,10 +31,6 @@ export default function ProfileForm() {
         navigate('/home')
     }
 
-    // function handleFileChange(event) {
-    //     console.log(event);
-    //     setUserPicture(event.target.value)
-    // }
 
     return (
 
