@@ -12,8 +12,8 @@ import avatar6 from "../assets/avatar6.jpg"
 
 export default function ProfileForm() {
     const [pictureRing, setPictureRing] = useState()
-    const {setUserName} = useContext(userNameContext);
-    const {setUserPicture} = useContext(userPictureContext);
+    const {userName, setUserName} = useContext(userNameContext);
+    const { userPicture, setUserPicture} = useContext(userPictureContext);
     const navigate = useNavigate();
     const gamerPics = [
         avatar1, avatar2, avatar3, avatar4, avatar5, avatar6
@@ -21,10 +21,14 @@ export default function ProfileForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        console.log(event.target[0].value);
+        const userInput = event.target[0].value;
+
+        setUserName(userInput);
+
+        localStorage.setItem('userName', JSON.stringify(userInput));
+        localStorage.setItem('userPicture', JSON.stringify(userPicture));
+
         navigate('/home')
-        // localStorage.setItem('userProfile', JSON.stringify(userProfile))
-        setUserName(event.target[0].value);
     }
 
     // function handleFileChange(event) {
