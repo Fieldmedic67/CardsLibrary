@@ -28,7 +28,7 @@ export default function ProfileForm() {
         localStorage.setItem('userName', JSON.stringify(userInput));
         localStorage.setItem('userPicture', JSON.stringify(userPicture));
 
-        navigate('/home')
+        navigate('home')
     }
 
 

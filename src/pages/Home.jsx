@@ -22,7 +22,7 @@ const Home = () => {
             <div className="select-game">
                 <h1>Please Select a Game</h1>
 
-                <Link to="./two-three-seven-ten">
+                <Link to="../two-three-seven-ten">
                     <div className="two-three-seven-ten">
                         <img src="https://deckofcardsapi.com/static/img/2H.png" id="two" />
                         <img src="https://deckofcardsapi.com/static/img/3C.png" id="three" />

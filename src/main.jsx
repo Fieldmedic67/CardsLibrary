@@ -12,11 +12,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />} >
+          <Route path="/" element={<Layout />} >
+          <Route index element={<ProfileForm />} />
           <Route path="two-three-seven-ten" element={<TwoThreeSevenTen />} /> 
           <Route path="war" element={<War />} /> 
           <Route path="war/:sessionId" element={<War />} />
-          <Route index element={<ProfileForm />} />
           <Route path="home" element={<Home />} />
         </Route>
       </Routes>
