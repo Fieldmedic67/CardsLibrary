@@ -8,6 +8,7 @@ import avatar3 from "../assets/avatar3.jpg"
 import avatar4 from "../assets/avatar4.jpg"
 import avatar5 from "../assets/avatar5.jpg"
 import avatar6 from "../assets/avatar6.jpg"
+import '../CSS-sheets/profile-form.css';
 
 
 export default function ProfileForm() {
@@ -67,7 +68,6 @@ export default function ProfileForm() {
                     </button>
                 </div>
 
-                <button>Click Me!</button>
             </form>
         </div>
 

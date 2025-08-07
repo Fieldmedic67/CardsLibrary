@@ -1,0 +1,7 @@
+body {
+    background-image: url('../assets/profile-form-background.png');
+}
+
+#username-input {
+    background-color: #414851;
+}
