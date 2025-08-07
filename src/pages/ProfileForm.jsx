@@ -11,7 +11,7 @@ import avatar6 from "../assets/avatar6.jpg"
 
 
 export default function ProfileForm() {
-    const [pictureRing, setPictureRing] = useState()
+
     const { setUserName } = useContext(userNameContext);
     const { userPicture, setUserPicture} = useContext(userPictureContext);
     const navigate = useNavigate();
@@ -33,8 +33,8 @@ export default function ProfileForm() {
 
 
     return (
+        <div>
 
-        <>
             <form onSubmit={(event) => handleSubmit(event)}
                   className="flex flex-col items-center gap-4 text-xl font-bold mt-6 text-center font-mono">
                 <div className="max-w-sm mx-auto p-4">
@@ -69,8 +69,9 @@ export default function ProfileForm() {
 
                 <button>Click Me!</button>
             </form>
+        </div>
 
-        </>
+
 
 
 
