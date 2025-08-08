@@ -24,18 +24,17 @@ export default function ProfileForm() {
         event.preventDefault();
         let userInput = event.target[0].value;
 
-         if (userInput === ""){
+        if (userInput === ""){
             alert("Please enter a valid username")
+        } else if(userInput.trim().split(" ").filter((char) => char).join("").toLowerCase() === "player2") {
+            alert("nice try guy")
         } else {
             setUserName(userInput);
-            navigate('home');
             localStorage.setItem('userName', JSON.stringify(userInput));
             localStorage.setItem('userPicture', JSON.stringify(userPicture));
+            navigate('home');
         }
-
-
     }
-
 
     return (
         <div>
