@@ -94,8 +94,8 @@ export class WarLogic {
     },
   };
 
-  static async createNewGame(sessionId, player1Id, player2Id) {
-    const deck = await Deck.create(sessionId, player1Id, player2Id);
+  static async createNewGame(sessionId, connectingPlayerId) {
+    const deck = await Deck.create(sessionId, connectingPlayerId,);
 
     return new WarLogic(deck);
   }

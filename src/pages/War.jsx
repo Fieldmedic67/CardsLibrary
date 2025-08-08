@@ -21,8 +21,8 @@ export function War() {
     const init = async () => {
       const newGame = await WarLogic.createNewGame(
         sessionId,
-        playerId,
-        "player2" // handle logic.. to get player2name
+        playerId
+        // "player2" // handle logic.. to get player2name
       );
       setGame(newGame);
     };
@@ -78,6 +78,7 @@ export function War() {
         className="p-4 border rounded-full bg-pink-500 text-white cursor-pointer"
         onClick={() => {
           setPlayerId(playerId === myId ? "player2" : myId);
+          game.refresh();
         }}
       >
         Change Player (You are {playerId})
