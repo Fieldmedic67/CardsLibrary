@@ -3,32 +3,40 @@ import { Deck } from "../util/Deck";
 export class WarLogic {
   deck;
   winnerOfBattle;
+  playerId;
+  opponentId;
+
   transitions = {
     PlayCard: {
-      async transition(playerId) {
-        //wait for both players to play a card
-        // look to see how many cards remaining in the given player's drawing pile
-        const player1MadeTurn =
-          (await this.deck.getCardsRemainingFromPile(
-            this.deck.player1Id + "_Drawing"
-          )) > 0;
-        const player2MadeTurn =
-          (await this.deck.getCardsRemainingFromPile(
-            this.deck.player2Id + "_Drawing"
-          )) > 0;
+      async transition() {
+        const playerPile = await this.deck.getPile(
+          this.deck.sessionId,
+          this.playerId + "_Drawing"
+        );
 
-        const currentPlayerMadeTurn =
-          playerId === this.deck.player1Id ? player1MadeTurn : player2MadeTurn;
+        console.log(playerPile);
 
-        const otherPlayerMadeTurn =
-          playerId !== this.deck.player1Id ? player1MadeTurn : player2MadeTurn;
+        const drawRemaining =
+          playerPile.piles[this.playerId + "_Drawing"].remaining;
 
-        if (!currentPlayerMadeTurn) {
+        const opponentDrawRemaining = this.opponentId
+          ? playerPile.piles[this.opponentId + "_Drawing"].remaining
+          : 0;
+
+        const playerTurnDone = drawRemaining > 0;
+        const opponentTurnDone = opponentDrawRemaining > 0;
+
+        if (!playerTurnDone) {
           console.log(`Playing ${playerId}'s top card`);
           await this.deck.drawCards(playerId);
-        } //draw a card out of the player's drawingPile and place into the playingPile
-        if (!otherPlayerMadeTurn) {
-          console.log("waiting for other player to play a card");
+        }
+
+        if (!opponentTurnDone) {
+          console.log(
+            `Waiting for ${
+              this.opponentId ? this.opponentId : "other player"
+            } to play a card`
+          );
           return;
         }
 
@@ -94,44 +102,70 @@ export class WarLogic {
     },
   };
 
-  static async createNewGame(sessionId, player1Id, player2Id) {
-    const deck = await Deck.create(sessionId, player1Id, player2Id);
+  subscribe(listener) {
+    this.listeners = [...this.listeners, listener];
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
 
-    return new WarLogic(deck);
+  getSnapshot() {
+    return this.version;
+  }
+
+  emit() {
+    this.version++;
+    this.listeners.forEach((l) => l());
+  }
+
+  static async createNewGame(sessionId, connectingPlayerId) {
+    const deck = await Deck.create(sessionId, connectingPlayerId);
+    const newGame = new WarLogic(deck);
+    newGame.playerId = connectingPlayerId;
+
+    return newGame;
+  }
+
+  async switchPlayer() {
+    const temp = this.playerId;
+
+    // Get name of other player
+    // Get all piles first
+    const playerPile = await this.deck.getPile(
+      this.deck.sessionId,
+      this.playerId
+    );
+    const piles = Object.keys(playerPile.piles);
+    console.log(piles);
+
+    // Remove current player and all drawing piles
+    const filtered = piles.filter(
+      (item) =>
+        item.indexOf(this.playerId) === -1 &&
+        item.indexOf("_Drawing") === -1 &&
+        item.indexOf("Player2") === -1
+    );
+    console.log(filtered);
+
+    const name = filtered[0] ?? null;
+
+    // If player 2 hasnt played, lets make a new player name (default = "Opponent")
+    if (!name) {
+      this.playerId = "Opponent";
+    } else this.playerId = name;
+
+    this.opponentId = temp;
+
+    this.emit();
   }
 
   constructor(deck) {
     if (!deck) throw new Error("Deck must be provided");
     this.deck = deck;
     this.state = "PlayCard";
-  }
-
-  static clone(game) {
-    const clone = new WarLogic(game.deck);
-    clone.state = game.state;
-    clone.winnerOfBattle = game.winnerOfBattle;
-    return clone;
-  }
-
-  async refresh(playerId) {
-    const opponentId =
-      playerId === this.deck.player1
-        ? this.deck.player2Id
-        : this.deck.player1Id;
-
-    const hasPlayerPlayed =
-      (await this.deck.getCardsRemainingFromPile(playerId + "_Drawing")) > 0;
-
-    const hasOpponentPlayed =
-      (await this.deck.getCardsRemainingFromPile(opponentId + "_Drawing")) > 0;
-
-    if (hasPlayerPlayed && hasOpponentPlayed && this.state === "PlayCard") {
-      this.state = "CompareCards";
-      await this.deck.refresh();
-      return WarLogic.clone(this);
-    } else {
-      return this;
-    }
+    this.listeners = [];
+    this.snapshot = {};
+    this.version = 0;
   }
 
   getCardValue(card) {
@@ -165,6 +199,7 @@ export class WarLogic {
     const action = this.transitions[this.state]["transition"];
     if (action) {
       await action.call(this, param);
+      this.emit();
       return WarLogic.clone(this);
     } else {
       console.log("Invalid action");
