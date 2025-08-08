@@ -25,7 +25,7 @@ function useWarGame(sessionId, playerId) {
     // Add a listener and returns its cleanup method
     (cb) => gameRef.current?.subscribe(cb),
     // Get the state of the game
-    () => gameRef.current?.getSnapshot()
+    () => gameRef.current?.version ?? 0
   );
 
   return { game: gameRef.current, isLoading };
@@ -43,10 +43,8 @@ export function War() {
 
   useEffect(() => {
     if (!game || !game.deck) return;
+
     //When the deck loading finishes, update url if param not already set
-
-    const loadName = async () => {};
-
     if (!sessionId)
       navigator(`/war/${game?.deck?.sessionId}`, { replace: true });
   }, [game?.deck]);
@@ -73,12 +71,9 @@ export function War() {
       />
       <button
         className="p-4 border rounded-full bg-pink-500 text-white cursor-pointer"
-        onClick={() => {
-          //setPlayerId(playerId === myId ? "player2" : myId);
-          game.switchPlayer();
-          console.log(myId);
-
-          console.log("Switched");
+        onClick={async () => {
+          await game.switchPlayer();
+          console.log(game.playerId);
         }}
       >
         Change Player (You are {game.playerId})

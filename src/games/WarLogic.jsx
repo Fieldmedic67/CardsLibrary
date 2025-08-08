@@ -9,7 +9,12 @@ export class WarLogic {
   transitions = {
     PlayCard: {
       async transition() {
-        const playerPile = await this.deck.getPile(this.playerId + "_Drawing");
+        const playerPile = await this.deck.getPile(
+          this.deck.sessionId,
+          this.playerId + "_Drawing"
+        );
+
+        console.log(playerPile);
 
         const drawRemaining =
           playerPile.piles[this.playerId + "_Drawing"].remaining;
@@ -121,11 +126,37 @@ export class WarLogic {
     return newGame;
   }
 
-  switchPlayer() {
-    // Get other player name
+  async switchPlayer() {
     const temp = this.playerId;
-    this.playerId = "player2"; //this.opponentId;
+
+    // Get name of other player
+    // Get all piles first
+    const playerPile = await this.deck.getPile(
+      this.deck.sessionId,
+      this.playerId
+    );
+    const piles = Object.keys(playerPile.piles);
+    console.log(piles);
+
+    // Remove current player and all drawing piles
+    const filtered = piles.filter(
+      (item) =>
+        item.indexOf(this.playerId) === -1 &&
+        item.indexOf("_Drawing") === -1 &&
+        item.indexOf("Player2") === -1
+    );
+    console.log(filtered);
+
+    const name = filtered[0] ?? null;
+
+    // If player 2 hasnt played, lets make a new player name (default = "Opponent")
+    if (!name) {
+      this.playerId = "Opponent";
+    } else this.playerId = name;
+
     this.opponentId = temp;
+
+    this.emit();
   }
 
   constructor(deck) {
@@ -134,6 +165,7 @@ export class WarLogic {
     this.state = "PlayCard";
     this.listeners = [];
     this.snapshot = {};
+    this.version = 0;
   }
 
   getCardValue(card) {
