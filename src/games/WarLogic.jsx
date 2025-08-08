@@ -1,5 +1,8 @@
 import { Deck } from "../util/Deck";
 
+const userName = JSON.parse(localStorage.getItem('userName'))
+const player1 = userName;
+
 export class WarLogic {
   deck;
   winnerOfBattle;
@@ -40,11 +43,11 @@ export class WarLogic {
         const player1Value = this.getCardValue(player1Card);
         const player2Value = this.getCardValue(player2Card);
         if (player1Value > player2Value) {
-          winnerOfBattle = player1;
+          this.winnerOfBattle = player1;
         } else if (player2Value > player1Value) {
-          winnerOfBattle = player2;
+          this.winnerOfBattle = "player2";
         } else {
-          winnerOfBattle = null;
+          this.winnerOfBattle = null;
           this.state = "WarPreparation";
           return;
         }
@@ -69,6 +72,13 @@ export class WarLogic {
     },
     GameOver: {
       transition() {
+          if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0 && this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
+              alert("You both suck")
+          }else if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0) {
+                  alert('Player2 has won')
+              } else if (this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
+                  alert(`${player1} has won`)
+              }
         return;
       },
     },

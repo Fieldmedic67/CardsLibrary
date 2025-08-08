@@ -1,4 +1,6 @@
 import { useState} from "react";
+import '../CSS-sheets/ProfileHeader.css';
+
 
 export default function ProfileHeader(){
 
@@ -12,10 +14,10 @@ export default function ProfileHeader(){
             <span>Waddup {userName || "Playa"} </span>
 
 
-            <img onClick-={() => setShowProfileMenu(true)} src={userPicture} alt="profile-picture" className="inline w-20 h-20 rounded-full object-cover border-2 border-transparent hover: cursor-pointer" />
+            <img onClick={() => setShowProfileMenu(!showProfileMenu)} src={userPicture} alt="profile-picture" id="profile-picture" className="inline w-20 h-20 rounded-full object-cover border-2 border-transparent hover: cursor-pointer" />
             {showProfileMenu && (
-            <div>
-                <ul>
+            <div className='hidden-menu-container'>
+                <ul className="option-list">
                     <li>option 1</li>
                     <li>option 2</li>
                     <li>option 3</li>
