@@ -176,7 +176,7 @@ export class Deck {
       if (!Object.keys(playerCards.piles).includes(pileId)) {
         return 0;
       }
-
+      console.log(playerCards.piles[pileId].remaining)
       return playerCards.piles[pileId].remaining;
     } catch (err) {
       this.error = err.message;

@@ -64,6 +64,7 @@ export class WarLogic {
 
     GameOver: {
       transition() {
+        console.log(`GameOver`)
         if (this.deck.getCardsRemainingFromPile(this.playerId) === 0 && this.deck.getCardsRemainingFromPile(this.opponentId) === 0) {
           alert("TIE: You both suck")
         } else if (this.deck.getCardsRemainingFromPile(this.playerId) === 0) {
@@ -157,7 +158,7 @@ export class WarLogic {
   constructor(deck) {
     if (!deck) throw new Error("Deck must be provided");
     this.deck = deck;
-    this.state = "GameOver";
+    this.state = "PlayCard";
     this.listeners = [];
     this.snapshot = {};
     this.version = 0;
@@ -212,6 +213,7 @@ export class WarLogic {
   async transition(param) {
     const action = this.transitions[this.state]["transition"];
     if (action) {
+      console.log(action);
       await action.call(this, param);
       this.emit();
     } else {
