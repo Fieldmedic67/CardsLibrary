@@ -9,29 +9,47 @@ export class Card {
   }
 }
 export class Deck {
-  constructor(sessionId, player1Id, player2Id) {
+  constructor(sessionId) {
     this.isLoading = true;
     this.error;
-    this.player1Id = player1Id;
-    this.player2Id = player2Id;
     this.sessionId = sessionId;
+    this.piles = [];
   }
 
-  static async create(sessionId, player1Id, player2Id) {
-    const deck = new Deck(sessionId, player1Id, player2Id);
-    await deck.onCreate();
+  async transferDefaultToPlayerPile(connectingPlayerId) {
+    try { // draw all cards from the pile
+      const drawResponse = await fetch(
+        `https://deckofcardsapi.com/api/deck/${this.sessionId}/pile/player2/draw/bottom/?count=26`
+      );
+      if (!drawResponse.ok) throw new Error("Bad draw");
+      const drawResponseJson = await drawResponse.json();
+      const cardCodeArray = drawResponseJson.cards.map((card) => card.code);
+      this.player2Id = connectingPlayerId;
+      await this.addCards(connectingPlayerId, cardCodeArray.slice(0, 26));
+    }
+
+    catch {
+
+    }
+  }
+
+  static async create(sessionId, connectingPlayerId) {
+    const deck = new Deck(sessionId);
+    await deck.onCreate(connectingPlayerId);
     return deck;
   }
 
-  async onCreate() {
+  async onCreate(connectingPlayerId) {
     try {
       if (!this.sessionId) {
         console.log("[Deck] No session ID provided. Making a new deck...");
-        await this.#createNewDeck();
+        await this.#createNewDeck(connectingPlayerId);
       } else {
         console.log(`[Deck] Loading session ${this.sessionId}...`);
-        await this.#loadDeckFromSessionId();
+        await this.#loadDeckFromSessionId(connectingPlayerId);
       }
+      await this.setPiles(connectingPlayerId);
+
     } catch (err) {
       this.error = err.message;
     } finally {
@@ -40,7 +58,7 @@ export class Deck {
     }
   }
 
-  async #createNewDeck() {
+  async #createNewDeck(connectingPlayerId) {
     // Create a new Deck
     const response = await fetch(
       "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
@@ -57,11 +75,12 @@ export class Deck {
     const drawResponseJson = await drawResponse.json();
     const cardCodeArray = drawResponseJson.cards.map((card) => card.code);
     this.sessionId = json.deck_id;
-    await this.cutCards(this.player1Id, cardCodeArray.slice(0, 26));
-    await this.cutCards(this.player2Id, cardCodeArray.slice(26, 52));
+    this.player1Id = connectingPlayerId;
+    await this.addCards(connectingPlayerId, cardCodeArray.slice(0, 26));
+    await this.addCards('Player2', cardCodeArray.slice(26, 52));
   }
 
-  async #loadDeckFromSessionId() {
+  async #loadDeckFromSessionId(connectingPlayerId) {
     try {
       const loadResponse = await fetch(
         `https://www.deckofcardsapi.com/api/deck/${this.sessionId}`
@@ -75,12 +94,18 @@ export class Deck {
         this.error = `Failed to load the session`;
         return;
       }
+      // Check to see if the connectingPlayerId has a pile
+      const playerHasPile = await this.getPile(this.sessionId, connectingPlayerId)
+
+      if (!playerHasPile) {
+        await this.transferDefaultToPlayerPile(connectingPlayerId);
+      }
     } catch (err) {
       this.error = err.message;
     }
   }
 
-  async cutCards(pileId, cardString) {
+  async addCards(pileId, cardString) {
     const pileResponse = await fetch(
       `https://deckofcardsapi.com/api/deck/${this.sessionId}/pile/${pileId}/add/?cards=${cardString}`
     );
@@ -123,7 +148,12 @@ export class Deck {
     console.log("AddToPilesJson:", addToPilesJson);
   }
 
-  async getCards(deckId, pileId) {
+  async setPiles(pileId) {
+    const piles = await this.getPile(this.sessionId, pileId);
+    this.piles = piles.piles;
+  }
+
+  async getPile(deckId, pileId) {
     const pileCardResponse = await fetch(
       `https://deckofcardsapi.com/api/deck/${deckId}/pile/${pileId}/list/`
     );
@@ -140,7 +170,7 @@ export class Deck {
   async getCardsRemainingFromPile(pileId) {
     try {
       // console.log(`[Deck] Loading cards from pile ${pileId}...`);
-      var playerCards = await this.getCards(this.sessionId, pileId);
+      var playerCards = await this.getPile(this.sessionId, pileId);
       // console.log("[Deck] Finished loading pile!");
 
       if (!Object.keys(playerCards.piles).includes(pileId)) {
@@ -154,10 +184,10 @@ export class Deck {
     }
   }
 
-  async refresh() {
+  async refresh(connectingPlayerId) {
     try {
       console.log(`[Deck] reloading ${this.sessionId}...`);
-      this.#loadDeckFromSessionId();
+      this.#loadDeckFromSessionId(connectingPlayerId);
       console.log("[Deck] Finished loading session!");
     } catch (err) {
       console.log("WEIRD2");
