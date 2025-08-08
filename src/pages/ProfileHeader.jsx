@@ -19,7 +19,7 @@ export default function ProfileHeader(){
             {showProfileMenu && (
             <div className='hidden-menu-container'>
                 <ul className="option-list">
-                    <li><button onClick={(event) => console.log(event)} className="hidden-menu-option" key="change-username" type="button">Change Username</button></li>
+                    <li onClick={(event) => console.log(event)} className="hidden-menu-option" key="change-username">Change Username</li>
                     <li className="hidden-menu-option" key="change-profile-picture">Change Profile Picture</li>
                 </ul>
             </div>
