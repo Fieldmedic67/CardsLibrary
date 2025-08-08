@@ -73,7 +73,7 @@ export class WarLogic {
     GameOver: {
       transition() {
           if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0 && this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
-              alert("You both suck")
+              alert("TIE: You both suck")
           }else if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0) {
                   alert('Player2 has won')
               } else if (this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
