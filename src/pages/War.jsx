@@ -5,12 +5,13 @@ import { WarLogic } from "../games/WarLogic.jsx";
 import { useNavigate } from "react-router-dom";
 
 export function War() {
+    const userName = JSON.parse(localStorage.getItem('userName'))
+    const userPicture = JSON.parse(localStorage.getItem('userPicture'))
   const { sessionId } = useParams();
   const [game, setGame] = useState();
-  const [playerId, setPlayerId] = useState("player1"); // temp replace with logic from Alec and Josh
+  const [playerId, setPlayerId] = useState(userName);
   const REFRESH_RATE_MS = 5000;
-  const userName = JSON.parse(localStorage.getItem('userName'))
-  const userPicture = JSON.parse(localStorage.getItem('userPicture'))
+
   // player 1 puts card in 3rd pile
   // player 2 puts card in 3rd pile
   // player with higher value puts those cards at bottom of their pile
@@ -21,7 +22,7 @@ export function War() {
     const init = async () => {
       const newGame = await WarLogic.createNewGame(
         sessionId,
-        "player1",
+        userName,
         "player2"
       );
       setGame(newGame);

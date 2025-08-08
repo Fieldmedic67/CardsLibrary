@@ -12,7 +12,7 @@ export default function ProfileHeader(){
             <span>Waddup {userName || "Playa"} </span>
 
 
-            <img onClick-={() => setShowProfileMenu(true)} src={userPicture} alt="profile-picture" className="inline w-20 h-20 rounded-full object-cover border-2 border-transparent hover: cursor-pointer" />
+            <img onClick={() => setShowProfileMenu(!showProfileMenu)} src={userPicture} alt="profile-picture" className="inline w-20 h-20 rounded-full object-cover border-2 border-transparent hover: cursor-pointer" />
             {showProfileMenu && (
             <div>
                 <ul>
