@@ -4,6 +4,16 @@ import { useParams } from "react-router-dom";
 import { WarLogic } from "../games/WarLogic.jsx";
 import { useNavigate } from "react-router-dom";
 
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'PLAY_CARDS':
+      
+      return {...state}
+    default:
+      return state
+  }
+}
+
 export function War() {
   const { sessionId } = useParams();
   const [game, setGame] = useState();
