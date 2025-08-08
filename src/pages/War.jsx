@@ -38,6 +38,8 @@ export function War() {
   const myId = JSON.parse(localStorage.getItem("userName"));
   const userPicture = JSON.parse(localStorage.getItem("userPicture"));
 
+  const navigator = useNavigate();
+
   const { game, isLoading } = useWarGame(sessionId, myId);
 
   useEffect(() => {
