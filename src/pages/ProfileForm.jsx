@@ -1,4 +1,4 @@
-import { useState, useContext, use } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import userNameContext from "../context/UserNameContext.jsx";
 import userPictureContext from "../context/UserPictureContext.jsx";
@@ -14,7 +14,7 @@ import '../CSS-sheets/profile-form.css';
 export default function ProfileForm() {
 
     const { setUserName } = useContext(userNameContext);
-    const { userPicture, setUserPicture} = useContext(userPictureContext);
+    const { userPicture, setUserPicture } = useContext(userPictureContext);
     const navigate = useNavigate();
     const gamerPics = [
         avatar1, avatar2, avatar3, avatar4, avatar5, avatar6
@@ -22,14 +22,18 @@ export default function ProfileForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        const userInput = event.target[0].value;
+        let userInput = event.target[0].value;
 
-        setUserName(userInput);
+         if (userInput === ""){
+            alert("Please enter a valid username")
+        } else {
+            setUserName(userInput);
+            navigate('home');
+            localStorage.setItem('userName', JSON.stringify(userInput));
+            localStorage.setItem('userPicture', JSON.stringify(userPicture));
+        }
 
-        localStorage.setItem('userName', JSON.stringify(userInput));
-        localStorage.setItem('userPicture', JSON.stringify(userPicture));
 
-        navigate('home')
     }
 
 
@@ -37,11 +41,11 @@ export default function ProfileForm() {
         <div>
 
             <form onSubmit={(event) => handleSubmit(event)}
-                  className="flex flex-col items-center gap-4 text-xl font-bold mt-6 text-center font-mono">
+                className="flex flex-col items-center gap-4 text-xl font-bold mt-6 text-center font-mono">
                 <div className="max-w-sm mx-auto p-4">
                     <label htmlFor="username-input"></label>
                     <input type="text" id="username-input" placeholder="Your Username Here..."
-                           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none foucs:ring-2 focus:ring-blue-500 "/>
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none foucs:ring-2 focus:ring-blue-500 " />
                     {/*<input type="file" accept="image/*" onChange={(event) => handleFileChange(event)} />*/}
                 </div>
 
@@ -50,8 +54,8 @@ export default function ProfileForm() {
                     {gamerPics.map((url, index) => (
                         <label>
                             <img key={index} src={url} alt='cool pic bro' onClick={() => setUserPicture(url)}
-                                 className="w-20 h-20 rounded-full object-cover border-2 border-transparent hover:border-blue-500 hover: scale-105 transition cursor-pointer active:border-red-500 "/>
-                            <input type="radio" name="gamerpic" id="gamerpic"/>
+                                className="w-20 h-20 rounded-full object-cover border-2 border-transparent hover:border-blue-500 hover: scale-105 transition cursor-pointer active:border-red-500 " />
+                            <input type="radio" name="gamerpic" id="gamerpic" />
                         </label>
 
                     ))}
@@ -75,6 +79,6 @@ export default function ProfileForm() {
 
 
 
-)
+    )
 }
 
