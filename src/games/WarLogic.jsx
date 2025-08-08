@@ -129,6 +129,11 @@ export class WarLogic {
         ? this.deck.player2Id
         : this.deck.player1Id;
 
+
+    // one http req to get piles (and see requested)
+
+
+    // 
     const hasPlayerPlayed =
       (await this.deck.getCardsRemainingFromPile(playerId + "_Drawing")) > 0;
 

@@ -24,17 +24,19 @@ export default function ProfileForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        const userInput = event.target[0].value;
+        let userInput = event.target[0].value;
 
-        setUserName(userInput);
-
-        localStorage.setItem('userName', JSON.stringify(userInput));
-        localStorage.setItem('userPicture', JSON.stringify(userPicture));
-        setSignedIn(true);
-
-        navigate('home')
+        if (userInput === "") {
+            alert("Please enter a valid username")
+        } else if (userInput.trim().split(" ").filter((char) => char).join("").toLowerCase() === "player2") {
+            alert("nice try guy")
+        } else {
+            setUserName(userInput);
+            localStorage.setItem('userName', JSON.stringify(userInput));
+            localStorage.setItem('userPicture', JSON.stringify(userPicture));
+            navigate('home');
+        }
     }
-
 
     if (signedIn === true) {
         <h1>You've already signed in</h1>
@@ -82,6 +84,5 @@ export default function ProfileForm() {
 
         )
     }
-
 }
 
