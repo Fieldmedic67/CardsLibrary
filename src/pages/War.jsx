@@ -1,97 +1,87 @@
-import { useEffect, useState } from "react";
-import { Deck } from "../util/Deck.jsx";
+import { useEffect, useState, useSyncExternalStore, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { WarLogic } from "../games/WarLogic.jsx";
 import { useNavigate } from "react-router-dom";
 
-const reducer = (state, action) => {
-  switch(action.type) {
-    case 'PLAY_CARDS':
-      
-      return {...state}
-    default:
-      return state
-  }
+function useWarGame(sessionId, playerId) {
+  const gameRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadGame = async () => {
+      const game = await WarLogic.createNewGame(sessionId, playerId);
+
+      // If game reference has not been set... set it
+      if (!gameRef.current) {
+        gameRef.current = game;
+      }
+
+      setIsLoading(false);
+    };
+    loadGame();
+  }, [sessionId, playerId]);
+
+  useSyncExternalStore(
+    // Add a listener and returns its cleanup method
+    (cb) => gameRef.current?.subscribe(cb),
+    // Get the state of the game
+    () => gameRef.current?.getSnapshot()
+  );
+
+  return { game: gameRef.current, isLoading };
 }
 
 export function War() {
   const { sessionId } = useParams();
-  const [game, setGame] = useState();
   const REFRESH_RATE_MS = 5000;
   const myId = JSON.parse(localStorage.getItem("userName"));
   const userPicture = JSON.parse(localStorage.getItem("userPicture"));
-  const [playerId, setPlayerId] = useState(myId);
-  // player 1 puts card in 3rd pile
-  // player 2 puts card in 3rd pile
-  // player with higher value puts those cards at bottom of their pile
+
+  const { game, isLoading } = useWarGame(sessionId, myId);
 
   const navigator = useNavigate();
 
   useEffect(() => {
-    const init = async () => {
-      const newGame = await WarLogic.createNewGame(
-        sessionId,
-        playerId
-        // "player2" // handle logic.. to get player2name
-      );
-      setGame(newGame);
-    };
-    init();
-
-    // refresh war every 5 seconds
-    // const interval = setInterval(() => {
-    //   setGame(async (prev) => {
-    //     if (!prev) return prev;
-    //     const refreshed = await prev.refresh(playerId);
-    //     if (!refreshed) return prev;
-    //     return refreshed;
-    //   });
-    // }, REFRESH_RATE_MS);
-
-    // return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (!game || !game.deck || game.deck.isLoading) return;
+    if (!game || !game.deck) return;
     //When the deck loading finishes, update url if param not already set
+
+    const loadName = async () => {};
+
     if (!sessionId)
       navigator(`/war/${game?.deck?.sessionId}`, { replace: true });
-  }, [game, sessionId]);
+  }, [game?.deck]);
 
-  if (game?.deck.error) {
-    return <p>{game.deck.error}</p>;
+  if (isLoading || !game.deck) {
+    return <p className="text-white">Loading...</p>;
   }
 
-  if (game?.deck.isLoading) {
-    return <p>Loading...</p>;
+  if (game.deck.error) {
+    return <p className="text-white">{game.deck.error}</p>;
   }
 
   return (
     <>
-      <h1>Game ID: {game?.deck.sessionId}</h1>
-      <h1>State: {game?.state}</h1>
-      {game?.state === "PlayCard" && (
-        <img
-          className="cursor-pointer"
-          src="/back.png"
-          alt="Back of Card"
-          onClick={async () => {
-            if (!game) return;
-            console.log(`Start State: ${game.state}`);
-            const next = await game.transition(playerId);
-            setGame(next);
-            console.log(`End State: ${game.state}`);
-          }}
-        />
-      )}
+      <h1 className="text-white">Game ID: {game.deck.sessionId}</h1>
+      <h1 className="text-white">State: {game.state}</h1>
+      <img
+        className="cursor-pointer"
+        src="/back.png"
+        alt="Back of Card"
+        onClick={async () => {
+          await game.transition(game.playerId);
+        }}
+      />
       <button
         className="p-4 border rounded-full bg-pink-500 text-white cursor-pointer"
         onClick={() => {
-          setPlayerId(playerId === myId ? "player2" : myId);
-          game.refresh();
+          //setPlayerId(playerId === myId ? "player2" : myId);
+          game.switchPlayer();
+          console.log(myId);
+
+          console.log("Switched");
         }}
       >
-        Change Player (You are {playerId})
+        Change Player (You are {game.playerId})
       </button>
     </>
   );

@@ -95,7 +95,7 @@ export class Deck {
         return;
       }
       // Check to see if the connectingPlayerId has a pile
-      const playerHasPile = await this.getCards(this.sessionId, connectingPlayerId)
+      const playerHasPile = await this.getPile(this.sessionId, connectingPlayerId)
 
       if (!playerHasPile) {
         await this.transferDefaultToPlayerPile(connectingPlayerId);
@@ -149,11 +149,11 @@ export class Deck {
   }
 
   async setPiles(pileId) {
-    const piles = await this.getCards(this.sessionId, pileId);
+    const piles = await this.getPile(this.sessionId, pileId);
     this.piles = piles.piles;
   }
 
-  async getCards(deckId, pileId) {
+  async getPile(deckId, pileId) {
     const pileCardResponse = await fetch(
       `https://deckofcardsapi.com/api/deck/${deckId}/pile/${pileId}/list/`
     );
@@ -170,7 +170,7 @@ export class Deck {
   async getCardsRemainingFromPile(pileId) {
     try {
       // console.log(`[Deck] Loading cards from pile ${pileId}...`);
-      var playerCards = await this.getCards(this.sessionId, pileId);
+      var playerCards = await this.getPile(this.sessionId, pileId);
       // console.log("[Deck] Finished loading pile!");
 
       if (!Object.keys(playerCards.piles).includes(pileId)) {
