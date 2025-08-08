@@ -12,6 +12,7 @@ const Home = () => {
     const userName = JSON.parse(localStorage.getItem('userName'))
     const userPicture = JSON.parse(localStorage.getItem('userPicture'))
 
+
     return (
         <>
         <div className="text-xl font-bold mt-2 text-center font-mono">

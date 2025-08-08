@@ -1,3 +1,4 @@
+import ProfileHeader from "./ProfileHeader.jsx";
 import { useEffect, useState, useSyncExternalStore, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { WarLogic } from "../games/WarLogic.jsx";
@@ -32,14 +33,14 @@ function useWarGame(sessionId, playerId) {
 }
 
 export function War() {
+    const REFRESH_RATE_MS = 5000;
+
   const { sessionId } = useParams();
   const REFRESH_RATE_MS = 5000;
   const myId = JSON.parse(localStorage.getItem("userName"));
   const userPicture = JSON.parse(localStorage.getItem("userPicture"));
 
   const { game, isLoading } = useWarGame(sessionId, myId);
-
-  const navigator = useNavigate();
 
   useEffect(() => {
     if (!game || !game.deck) return;
@@ -59,6 +60,7 @@ export function War() {
 
   return (
     <>
+      <ProfileHeader/>
       <h1 className="text-white">Game ID: {game.deck.sessionId}</h1>
       <h1 className="text-white">State: {game.state}</h1>
       <img
