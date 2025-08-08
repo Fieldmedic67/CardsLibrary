@@ -8,7 +8,20 @@
     height: 200px;
     width: 200px;
     background-color: #052705;
+    animation: slide-down 600ms ease-out;
 }
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
 
 .option-list {
     display: flex;
