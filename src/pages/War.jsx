@@ -33,10 +33,8 @@ function useWarGame(sessionId, playerId) {
 }
 
 export function War() {
-    const REFRESH_RATE_MS = 5000;
-
-  const { sessionId } = useParams();
   const REFRESH_RATE_MS = 5000;
+  const { sessionId } = useParams();
   const myId = JSON.parse(localStorage.getItem("userName"));
   const userPicture = JSON.parse(localStorage.getItem("userPicture"));
 
@@ -60,7 +58,7 @@ export function War() {
 
   return (
     <>
-      <ProfileHeader/>
+      <ProfileHeader />
       <h1 className="text-white">Game ID: {game.deck.sessionId}</h1>
       <h1 className="text-white">State: {game.state}</h1>
       <img
