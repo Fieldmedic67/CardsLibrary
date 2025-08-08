@@ -19,7 +19,7 @@ export class Deck {
   async transferDefaultToPlayerPile(connectingPlayerId) {
     try { // draw all cards from the pile
       const drawResponse = await fetch(
-        `https://deckofcardsapi.com/api/deck/${this.sessionId}/pile/player2/draw/bottom/?count=26`
+        `https://deckofcardsapi.com/api/deck/${this.sessionId}/pile/Player2/draw/bottom/?count=26`
       );
       if (!drawResponse.ok) throw new Error("Bad draw");
       const drawResponseJson = await drawResponse.json();
@@ -42,10 +42,10 @@ export class Deck {
   async onCreate(connectingPlayerId) {
     try {
       if (!this.sessionId) {
-        console.log("[Deck] No session ID provided. Making a new deck...");
+        // console.log("[Deck] No session ID provided. Making a new deck...");
         await this.#createNewDeck(connectingPlayerId);
       } else {
-        console.log(`[Deck] Loading session ${this.sessionId}...`);
+        // console.log(`[Deck] Loading session ${this.sessionId}...`);
         await this.#loadDeckFromSessionId(connectingPlayerId);
       }
       await this.setPiles(connectingPlayerId);
@@ -53,7 +53,7 @@ export class Deck {
     } catch (err) {
       this.error = err.message;
     } finally {
-      console.log("[Deck] Finished loading deck!");
+      // console.log("[Deck] Finished loading deck!");
       this.isLoading = false;
     }
   }
@@ -116,36 +116,36 @@ export class Deck {
     }
   }
 
-  async drawCards(pileId, count = 1) {
-    const drawPileId = pileId + "_Drawing";
+  async drawCards(fromPileId, toPileId = undefined, count = 1) {
+    toPileId = toPileId ?? fromPileId + "_Drawing";
     const drawResponse = await fetch(
-      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${pileId}/draw/?count=${count}`
+      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${fromPileId}/draw/?count=${count}`
     );
     if (!drawResponse.ok) {
-      this.error = `Could not draw card from ${pileId}`;
+      this.error = `Could not draw card from ${fromPileId}`;
       console.error(this.error);
       return;
     }
 
     const drawJson = await drawResponse.json();
 
-    console.log("DrawJson:", drawJson);
+    // console.log("DrawJson:", drawJson);
 
     const cardCodeArray = drawJson.cards.map((card) => card.code);
 
     const addToDrawPileRes = await fetch(
-      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${drawPileId}/add/?cards=${cardCodeArray}`
+      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${toPileId}/add/?cards=${cardCodeArray}`
     );
 
     if (!addToDrawPileRes.ok) {
-      this.error = `Could not add cards to ${drawPileId}`;
+      this.error = `Could not add cards to ${toPileId}`;
       console.error(this.error);
 
       return;
     }
 
     const addToPilesJson = await addToDrawPileRes.json();
-    console.log("AddToPilesJson:", addToPilesJson);
+    // console.log("AddToPilesJson:", addToPilesJson);
   }
 
   async setPiles(pileId) {
@@ -176,7 +176,7 @@ export class Deck {
       if (!Object.keys(playerCards.piles).includes(pileId)) {
         return 0;
       }
-
+      console.log(playerCards.piles[pileId].remaining)
       return playerCards.piles[pileId].remaining;
     } catch (err) {
       this.error = err.message;

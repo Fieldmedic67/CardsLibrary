@@ -68,14 +68,17 @@ export function War() {
         src="/back.png"
         alt="Back of Card"
         onClick={async () => {
-          await game.transition(game.playerId);
+          if (game.state !== 'Computing'){await game.transition(game.playerId)};
+          await game.switchPlayer();
+          if (game.state !== 'Computing'){await game.transition(game.playerId)};
+          await game.switchPlayer();
         }}
       />
       <button
         className="p-4 border rounded-full bg-pink-500 text-white cursor-pointer"
         onClick={async () => {
           await game.switchPlayer();
-          console.log(game.playerId);
+          // console.log(game.playerId);
         }}
       >
         Change Player (You are {game.playerId})

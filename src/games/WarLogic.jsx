@@ -17,10 +17,11 @@ export class WarLogic {
           this.playerId + "_Drawing"
         );
 
-        console.log(playerPile);
+        // console.log(playerPile);
 
-        const drawRemaining =
-          playerPile.piles[this.playerId + "_Drawing"].remaining;
+        let drawRemaining = 0;
+        if (playerPile.piles[this.playerId + "_Drawing"]) { drawRemaining = playerPile.piles[this.playerId + "_Drawing"].remaining }
+        // playerPile.piles[this.playerId + "_Drawing"].remaining ?? 0;
 
         const opponentDrawRemaining = this.opponentId
           ? playerPile.piles[this.opponentId + "_Drawing"].remaining
@@ -30,63 +31,47 @@ export class WarLogic {
         const opponentTurnDone = opponentDrawRemaining > 0;
 
         if (!playerTurnDone) {
-          console.log(`Playing ${playerId}'s top card`);
-          await this.deck.drawCards(playerId);
+          // console.log(`Playing ${this.playerId}'s top card`);
+          await this.deck.drawCards(this.playerId);
         }
 
         if (!opponentTurnDone) {
           console.log(
-            `Waiting for ${
-              this.opponentId ? this.opponentId : "other player"
+            `Waiting for ${this.opponentId ? this.opponentId : "other player"
             } to play a card`
           );
           return;
         }
-
-        this.state = "CompareCards";
-      },
-    },
-    CompareCards: {
-      transition(player1Card, player2Card) {
-        const player1Value = this.getCardValue(player1Card);
-        const player2Value = this.getCardValue(player2Card);
-        if (player1Value > player2Value) {
-          this.winnerOfBattle = player1;
-        } else if (player2Value > player1Value) {
-          this.winnerOfBattle = "player2";
+        this.state = 'Computing';
+        this.compareCards();
+        if (this.winnerOfBattle) {
+          await this.rewardWinner();
         } else {
-          this.winnerOfBattle = null;
           this.state = "WarPreparation";
           return;
         }
-        this.state = "RewardWinner";
-      },
-    },
-    RewardWinner: {
-      transition() {
-        // add cards into winner's pile
-        this.state = "GameDoneCheck";
-      },
-    },
-    GameDoneCheck: {
-      transition() {
-        // check if loser's pile remaining = 0
-        if (true) {
-          this.state = "GameOver";
+
+        if (await this.gameIsDone() === true) {
+          this.state = 'GameOver';
+          this.emit();
         } else {
-          this.state = "PlayCard";
+          this.state = 'PlayCard';
         }
+
+        // this.state = "CompareCards";
       },
     },
+
     GameOver: {
       transition() {
-          if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0 && this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
-              alert("TIE: You both suck")
-          }else if (this.deck.getCardsRemainingFromPile(this.deck.player1Id) === 0) {
-                  alert('Player2 has won')
-              } else if (this.deck.getCardsRemainingFromPile(this.deck.player2Id) === 0) {
-                  alert(`${player1} has won`)
-              }
+        console.log(`GameOver`)
+        if (this.deck.getCardsRemainingFromPile(this.playerId) === 0 && this.deck.getCardsRemainingFromPile(this.opponentId) === 0) {
+          alert("TIE: You both suck")
+        } else if (this.deck.getCardsRemainingFromPile(this.playerId) === 0) {
+          alert(`${this.opponentId} has won`)
+        } else if (this.deck.getCardsRemainingFromPile(this.opponentId) === 0) {
+          alert(`${this.playerId} has won`)
+        }
         return;
       },
     },
@@ -146,7 +131,7 @@ export class WarLogic {
       this.playerId
     );
     const piles = Object.keys(playerPile.piles);
-    console.log(piles);
+    // console.log(piles);
 
     // Remove current player and all drawing piles
     const filtered = piles.filter(
@@ -155,13 +140,14 @@ export class WarLogic {
         item.indexOf("_Drawing") === -1 &&
         item.indexOf("Player2") === -1
     );
-    console.log(filtered);
+    // console.log(filtered);
 
     const name = filtered[0] ?? null;
 
     // If player 2 hasnt played, lets make a new player name (default = "Opponent")
     if (!name) {
       this.playerId = "Opponent";
+      this.deck.transferDefaultToPlayerPile(this.playerId);
     } else this.playerId = name;
 
     this.opponentId = temp;
@@ -194,23 +180,42 @@ export class WarLogic {
         return parseInt(card?.value);
     }
   }
-  compareCards(player1Card, player2Card) {
-    const player1Value = this.getCardValue(player1Card);
-    const player2Value = this.getCardValue(player2Card);
+  compareCards() {
+    const player1Value = 10;
+    const player2Value = 9;
+    // const player1Value = this.getCardValue(player1Card);
+    // const player2Value = this.getCardValue(player2Card);
+    console.log(`Comparing ${player1Value} and ${player2Value}`)
     if (player1Value > player2Value) {
-      return "player1";
+      this.winnerOfBattle = this.playerId;
+    } else if (player2Value > player1Value) {
+      this.winnerOfBattle = this.opponentId;
+    } else {
+      this.winnerOfBattle = null;
     }
-    if (player2Value > player1Value) {
-      return "player2";
-    }
-    return "war";
   }
+
+  async rewardWinner() {
+    // add cards into winner's pile
+    const playerCards = await this.deck.drawCards(this.playerId + '_Drawing', this.winnerOfBattle, 1);
+    const oponentCards = await this.deck.drawCards(this.opponentId + '_Drawing', this.winnerOfBattle, 1);
+
+    console.log(`Rewarding ${this.winnerOfBattle}`)
+  }
+
+  async gameIsDone() {
+    const loserId = this.winnerOfBattle !== this.playerId ? this.playerId : this.opponentId;
+    const loserNumRemaining = await this.deck.getCardsRemainingFromPile(loserId);
+    console.log(`Check loser id has this many cards: ${loserNumRemaining} Id: ${loserId}`)
+    return loserNumRemaining === 0;
+  }
+
   async transition(param) {
     const action = this.transitions[this.state]["transition"];
     if (action) {
+      console.log(action);
       await action.call(this, param);
       this.emit();
-      return WarLogic.clone(this);
     } else {
       console.log("Invalid action");
       return this;

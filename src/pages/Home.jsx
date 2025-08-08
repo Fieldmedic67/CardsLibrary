@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import UserNameContext from "../context/UserNameContext.jsx";
 import UserPictureContext from "../context/UserPictureContext.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
+import warImg from "../assets/war.png";
 
 const Home = () => {
 
@@ -11,7 +12,6 @@ const Home = () => {
 
     const userName = JSON.parse(localStorage.getItem('userName'))
     const userPicture = JSON.parse(localStorage.getItem('userPicture'))
-
 
     return (
         <>
@@ -31,13 +31,7 @@ const Home = () => {
                 </Link>
 
                 <Link to="../war">
-                    <div className="texas-hold-em">
-                        <img src="https://deckofcardsapi.com/static/img/AH.png" id="aceOfHearts" />
-                        <img src="https://deckofcardsapi.com/static/img/KH.png" id="kingOfHearts" />
-                        <img src="https://deckofcardsapi.com/static/img/QH.png" id="queenOfHearts" />
-                        <img src="https://deckofcardsapi.com/static/img/JH.png" id="jackOfHearts" />
-                        <img src="https://deckofcardsapi.com/static/img/0H.png" id="tenOfHearts" />
-                    </div>
+                        <img src={warImg} id="war" />
                 </Link>
             </div>
         </div>
