@@ -6,8 +6,8 @@
     top: 100px;
     right: 130px;
     height: 200px;
-    width: 200px;
-    background-color: #052705;
+    width: 300px;
+    background-color: #8f8f8f;
     animation: slide-down 600ms ease-out;
 }
 
@@ -29,6 +29,15 @@
     gap: 20px;
 }
 
+.hidden-menu-option {
+    border: 3px solid darkgreen;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: darkslategray;
+    color: black;
+}
+
 #profile-picture {
     margin-right: 150px;
 }
+
