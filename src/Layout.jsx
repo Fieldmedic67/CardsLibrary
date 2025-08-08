@@ -9,6 +9,8 @@ export function Layout() {
     const [userName, setUserName] = useState('default');
     const [userPicture, setUserPicture] = useState("https://static1.thegamerimages.com/wordpress/wp-content/uploads/2022/01/Anime.png")
 
+
+
     return (
     <div>
         <>

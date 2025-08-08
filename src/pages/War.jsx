@@ -9,7 +9,8 @@ export function War() {
   const [game, setGame] = useState();
   const [playerId, setPlayerId] = useState("player1"); // temp replace with logic from Alec and Josh
   const REFRESH_RATE_MS = 5000;
-
+  const userName = JSON.parse(localStorage.getItem('userName'))
+  const userPicture = JSON.parse(localStorage.getItem('userPicture'))
   // player 1 puts card in 3rd pile
   // player 2 puts card in 3rd pile
   // player with higher value puts those cards at bottom of their pile
