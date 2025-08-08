@@ -30,7 +30,7 @@ export default function ProfileHeader(){
 
             {showUserNameForm && (
                 <div className="hidden-change-username">
-                    <button onClick={() => {setShowUserNameForm(false)}}></button>
+                    <button className="return-button border-4 rounded-md hover:cursor-pointer"onClick={() => {setShowUserNameForm(false)}}>Return</button>
                     <form className="change-username-form" onSubmit={(event) => console.log(event)}>
                         <label>
                             Change Username
@@ -45,8 +45,8 @@ export default function ProfileHeader(){
     )
 }
 
-function handleUserNameChange(event){
-    event.preventDefault();
-
-    set
-}
+// function handleUserNameChange(event){
+//     event.preventDefault();
+//
+//     set
+// }
