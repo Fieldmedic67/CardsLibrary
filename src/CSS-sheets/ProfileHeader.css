@@ -13,6 +13,7 @@ li:hover {
     width: 300px;
     background-color: #8f8f8f;
     animation: slide-down 600ms ease-out;
+    z-index: 9999;
 }
 
 @keyframes slide-down {
