@@ -19,7 +19,10 @@ export default function ProfileHeader(){
             {showProfileMenu && (
             <div className='hidden-menu-container'>
                 <ul className="option-list">
-                    <li onClick={(event) => console.log(event)} className="hidden-menu-option" key="change-username">Change Username</li>
+                    <li onClick={() => {
+                        setShowUserNameForm(!showUserNameForm);
+                        setShowProfileMenu(!showProfileMenu);
+                    } } className="hidden-menu-option" key="change-username">Change Username</li>
                     <li className="hidden-menu-option" key="change-profile-picture">Change Profile Picture</li>
                 </ul>
             </div>
@@ -27,10 +30,10 @@ export default function ProfileHeader(){
 
             {showUserNameForm && (
                 <div className="hidden-change-username">
-                    <form onSubmit={(event) => console.log(event)}>
+                    <form className="change-username-form" onSubmit={(event) => console.log(event)}>
                         <label>
                             Change Username
-                            <input type="text"/>
+                            <input  type="text" className="border-2 ml-3"/>
                         </label>
                         <button type="submit">Submit</button>
                     </form>
@@ -39,4 +42,10 @@ export default function ProfileHeader(){
 
         </div>
     )
+}
+
+function handleUserNameChange(event){
+    event.preventDefault();
+
+    set
 }

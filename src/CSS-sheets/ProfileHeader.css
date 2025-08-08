@@ -46,3 +46,25 @@ li:hover {
     margin-right: 150px;
 }
 
+.hidden-change-username {
+    height: 600px;
+    width: 50%;
+    border: 5px solid black;
+    border-radius: 8px;
+    background-image: url("../assets/change-username-background.png");
+    background-size: cover;
+    position: absolute;
+    color: black;
+    top: 200px;
+    right: 475px;
+    z-index: 9999;
+}
+
+.change-username-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    gap: 40px;
+}
+
