@@ -37,8 +37,8 @@ function useWarGame(sessionId, playerId) {
 export function War() {
   const REFRESH_RATE_MS = 5000;
   const { sessionId } = useParams();
-  const myId = JSON.parse(localStorage.getItem("userName"));
-  const userPicture = JSON.parse(localStorage.getItem("userPicture"));
+  const myId = JSON.parse(sessionStorage.getItem("userName"));
+  const userPicture = JSON.parse(sessionStorage.getItem("userPicture"));
 
   const navigator = useNavigate();
 

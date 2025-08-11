@@ -4,8 +4,8 @@ import '../CSS-sheets/ProfileHeader.css';
 
 export default function ProfileHeader(){
 
-    const userName = JSON.parse(localStorage.getItem('userName'))
-    const userPicture = JSON.parse(localStorage.getItem('userPicture'))
+    const userName = JSON.parse(sessionStorage.getItem('userName'))
+    const userPicture = JSON.parse(sessionStorage.getItem('userPicture'))
 
     const [ showProfileMenu, setShowProfileMenu ] = useState(false);
     const [ showUserNameForm, setShowUserNameForm ] = useState(false);
