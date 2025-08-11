@@ -46,8 +46,8 @@ export class WarLogic {
           } else {
             //Check if player is "Player1" or "Player2"
             //If player dne
-            if (!this.playerPile)
-              await this.deck.transferDefaultToPlayerPile(this.playerId);
+            // if (!this.playerPile)
+            //   await this.deck.transferDefaultToPlayerPile(this.playerId);
 
             this.playerPile = await this.deck.drawCards(this.playerId);
 
@@ -130,7 +130,8 @@ export class WarLogic {
           this.playerPile.cards[this.playerPile.cards.length - 1],
           this.opponentPile.cards[this.opponentPile.cards.length - 1]
         );
-        if (this.winnerOfBattle) {
+        // Only run on one person
+        if (this.winnerOfBattle && this.deck.player1Id === this.playerId) {
           await this.rewardWinner();
         }
 
@@ -198,14 +199,13 @@ export class WarLogic {
     if (!this.opponentPile) {
       return;
     }
-    this.opponentWarPile = this.opponentPile.remaining;
     const playerTurnDone =
       (this.playerPile?.remaining ?? 0) > this.playerWarPile;
     const opponentTurnDone =
       (this.opponentPile?.remaining ?? 0) > this.opponentWarPile;
-    console.log(opponentTurnDone, playerTurnDone);
+    console.log(opponentTurnDone, this.opponentPile, this.opponentWarPile);
     if (playerTurnDone && opponentTurnDone) {
-      const action = this.transitions[Computing]["transition"];
+      const action = this.transitions["Computing"]["transition"];
       if (action) {
         //console.log(action);
         await action.call(this);
