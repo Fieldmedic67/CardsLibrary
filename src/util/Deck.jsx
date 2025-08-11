@@ -125,7 +125,7 @@ export class Deck {
   async drawCards(fromPileId, toPileId = undefined, count = 1) {
     toPileId = toPileId ?? fromPileId + "_Drawing";
     const drawResponse = await fetch(
-      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${fromPileId}/draw/bottom/?count=${count}`
+      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${fromPileId}/draw/?count=${count}`
     );
     if (!drawResponse.ok) {
       this.error = `Could not draw card from ${fromPileId}`;
@@ -172,7 +172,7 @@ export class Deck {
     }
 
     const pileCardJson = await pileCardResponse.json();
-    //console.log(pileId,pileCardJson)
+    console.log(pileId,pileCardJson)
     return pileCardJson;
   }
 
@@ -185,7 +185,7 @@ export class Deck {
       if (!Object.keys(playerCards.piles).includes(pileId)) {
         return 0;
       }
-      //console.log(playerCards.piles[pileId].remaining)
+      console.log(playerCards.piles[pileId].remaining)
       return playerCards.piles[pileId].remaining;
     } catch (err) {
       this.error = err.message;
