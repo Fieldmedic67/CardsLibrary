@@ -119,7 +119,7 @@ export class Deck {
   async drawCards(fromPileId, toPileId = undefined, count = 1) {
     toPileId = toPileId ?? fromPileId + "_Drawing";
     const drawResponse = await fetch(
-      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${fromPileId}/draw/?count=${count}`
+      `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/${fromPileId}/draw/bottom/?count=${count}`
     );
     if (!drawResponse.ok) {
       this.error = `Could not draw card from ${fromPileId}`;
