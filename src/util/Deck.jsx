@@ -16,21 +16,19 @@ export class Deck {
     this.piles = [];
   }
 
-  async transferDefaultToPlayerPile(connectingPlayerId) {
-    try { // draw all cards from the pile
+  async transferDefaultToPlayerPile(connectingPlayerId, retry = 0) {
+    try {
+      // draw all cards from the pile
       const drawResponse = await fetch(
-        `https://deckofcardsapi.com/api/deck/${this.sessionId}/pile/Player2/draw/bottom/?count=26`
+        `https://www.deckofcardsapi.com/api/deck/${this.sessionId}/pile/Player2/draw/bottom/?count=26`
       );
-      if (!drawResponse.ok) throw new Error("Bad draw");
+      if (!drawResponse.ok) {
+      }
       const drawResponseJson = await drawResponse.json();
       const cardCodeArray = drawResponseJson.cards.map((card) => card.code);
       this.player2Id = connectingPlayerId;
       await this.addCards(connectingPlayerId, cardCodeArray.slice(0, 26));
-    }
-
-    catch {
-
-    }
+    } catch {}
   }
 
   static async create(sessionId, connectingPlayerId) {
@@ -42,18 +40,17 @@ export class Deck {
   async onCreate(connectingPlayerId) {
     try {
       if (!this.sessionId) {
-        // console.log("[Deck] No session ID provided. Making a new deck...");
+        //console.log("[Deck] No session ID provided. Making a new deck...");
         await this.#createNewDeck(connectingPlayerId);
       } else {
-        // console.log(`[Deck] Loading session ${this.sessionId}...`);
+        //console.log(`[Deck] Loading session ${this.sessionId}...`);
         await this.#loadDeckFromSessionId(connectingPlayerId);
       }
       await this.setPiles(connectingPlayerId);
-
     } catch (err) {
       this.error = err.message;
     } finally {
-      // console.log("[Deck] Finished loading deck!");
+      console.log("[Deck] Finished loading deck!");
       this.isLoading = false;
     }
   }
@@ -77,7 +74,7 @@ export class Deck {
     this.sessionId = json.deck_id;
     this.player1Id = connectingPlayerId;
     await this.addCards(connectingPlayerId, cardCodeArray.slice(0, 26));
-    await this.addCards('Player2', cardCodeArray.slice(26, 52));
+    await this.addCards("Player2", cardCodeArray.slice(26, 52));
   }
 
   async #loadDeckFromSessionId(connectingPlayerId) {
@@ -95,9 +92,19 @@ export class Deck {
         return;
       }
       // Check to see if the connectingPlayerId has a pile
-      const playerHasPile = await this.getPile(this.sessionId, connectingPlayerId)
+      const playerHasPile = await this.getPile(
+        this.sessionId,
+        connectingPlayerId
+      );
 
-      if (!playerHasPile) {
+      console.log(
+        `${connectingPlayerId} has pile: ${!!playerHasPile.piles?.[
+          connectingPlayerId
+        ]}`
+      );
+
+      if (!playerHasPile.piles?.[connectingPlayerId]) {
+        console.log("player pile not found... transferring!");
         await this.transferDefaultToPlayerPile(connectingPlayerId);
       }
     } catch (err) {
@@ -129,8 +136,6 @@ export class Deck {
 
     const drawJson = await drawResponse.json();
 
-    // console.log("DrawJson:", drawJson);
-
     const cardCodeArray = drawJson.cards.map((card) => card.code);
 
     const addToDrawPileRes = await fetch(
@@ -146,8 +151,7 @@ export class Deck {
 
     const addToPilesJson = await addToDrawPileRes.json();
     const cardData = await this.getPile(this.sessionId, toPileId);
-    console.log(cardData, cardData.piles[toPileId])
-    return(cardData.piles[toPileId])
+    return cardData.piles[toPileId];
   }
 
   async setPiles(pileId) {
@@ -166,20 +170,16 @@ export class Deck {
     }
 
     const pileCardJson = await pileCardResponse.json();
-    console.log(pileId,pileCardJson)
     return pileCardJson;
   }
 
   async getCardsRemainingFromPile(pileId) {
     try {
-      // console.log(`[Deck] Loading cards from pile ${pileId}...`);
       var playerCards = await this.getPile(this.sessionId, pileId);
-      // console.log("[Deck] Finished loading pile!");
 
       if (!Object.keys(playerCards.piles).includes(pileId)) {
         return 0;
       }
-      console.log(playerCards.piles[pileId].remaining)
       return playerCards.piles[pileId].remaining;
     } catch (err) {
       this.error = err.message;
