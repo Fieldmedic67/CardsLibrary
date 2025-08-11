@@ -21,7 +21,7 @@ function useWarGame(sessionId, playerId) {
       setIsLoading(false);
     };
     loadGame(); { }
-    return () => { clearInterval(reload) }
+    //return () => { clearInterval(reload) }
   }, [sessionId, playerId]);
 
   useSyncExternalStore(

@@ -32,7 +32,6 @@ export class WarLogic {
 
 
         const playerTurnDone = (this.playerPile?.remaining ?? 0) > this.playerWarPile;
-
         const opponentTurnDone = (this.opponentPile?.remaining ?? 0) > this.opponentWarPile;
 
         if (!playerTurnDone) {
@@ -91,7 +90,27 @@ export class WarLogic {
         return;
       },
     },
+    Computing: {
+      async transition() {
+        this.playerWarPile = this.playerPile.cards.length;
+        this.opponentWarPile = this.opponentPile.cards.length;
+        console.log("player:", this.playerPile.cards, "opponent:", this.opponentPile.cards)
+        this.compareCards(this.playerPile.cards[this.playerPile.cards.length - 1], this.opponentPile.cards[this.opponentPile.cards.length - 1]);
+        if (this.winnerOfBattle) {
+          await this.rewardWinner();
+        }
+
+        if (await this.gameIsDone() === true) {
+          this.state = 'GameOver';
+          this.emit();
+        } else {
+          this.state = 'PlayCard';
+        }
+      }
+    }
+
   };
+
 
   subscribe(listener) {
     this.listeners = [...this.listeners, listener];
@@ -141,12 +160,26 @@ export class WarLogic {
       return
     }
     this.opponentId = name;
-    this.opponentPile = await (this.deck.getPile(this.deck.sessionId, this.opponentId + "_Drawing"));
+    this.opponentPile = (await (this.deck.getPile(this.deck.sessionId, this.opponentId + "_Drawing")))?.piles[this.opponentId + "_Drawing"];
     if (!this.opponentPile) {
       return
     }
+    this.opponentWarPile = this.opponentPile.remaining;
+    const playerTurnDone = (this.playerPile?.remaining ?? 0) > this.playerWarPile;
+    const opponentTurnDone = (this.opponentPile?.remaining ?? 0) > this.opponentWarPile;
+    console.log(opponentTurnDone,playerTurnDone)
+    if (playerTurnDone && opponentTurnDone) {
+      const action = this.transitions[Computing]["transition"];
+      if (action) {
+        //console.log(action);
+        await action.call(this);
+        this.emit();
+      } else {
+        console.log("Invalid action");
+      }
+    }
     console.log(this.opponentPile)
-      this.opponentWarPile = this.opponentPile.cards.remaining;
+
     this.emit();
   }
   async switchPlayer() {
