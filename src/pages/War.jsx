@@ -16,12 +16,12 @@ function useWarGame(sessionId, playerId) {
       if (!gameRef.current) {
         gameRef.current = game;
       }
-      var reload = setInterval(() => { game.reload() }, 5000)
+      //var reload = setInterval(() => { game.reload() }, 10000)
 
       setIsLoading(false);
     };
     loadGame(); { }
-    return () => { clearInterval(reload) }
+    //return () => { clearInterval(reload) }
   }, [sessionId, playerId]);
 
   useSyncExternalStore(
