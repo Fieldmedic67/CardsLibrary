@@ -95,6 +95,26 @@ export function War() {
       >
         Change Player (You are {game.playerId})
       </button>
+
+        <h1 className="text-white">Your Card</h1>
+        {game.playerPile?.cards.map((card) => {
+            return (
+                    <img src={card.image} alt={card.code}/>
+                )
+
+        })}
+
+        <h1 className="text-white">Opponent's Card</h1>
+        {game.opponentPile?.cards.map((card) => {
+            return (
+                <img src={card.image} alt={card.code}/>
+            )
+        })}
+
+
+
+        {console.log("logging player pile", game.playerPile?.cards)}
+        {console.log("logging opponent pile", game.opponentPile)}
     </>
   );
 }
