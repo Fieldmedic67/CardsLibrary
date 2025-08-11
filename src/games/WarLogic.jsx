@@ -47,7 +47,7 @@ export class WarLogic {
             //Check if player is "Player1" or "Player2"
             //If player dne
             if (!this.playerPile)
-              this.deck.transferDefaultToPlayerPile(this.playerId);
+              await this.deck.transferDefaultToPlayerPile(this.playerId);
 
             this.playerPile = await this.deck.drawCards(this.playerId);
 
@@ -229,7 +229,7 @@ export class WarLogic {
       this.playerId
     );
     const piles = Object.keys(playerPile.piles);
-    // console.log(piles);
+    console.log(piles);
 
     // Remove current player and all drawing piles
     const filtered = piles.filter(
@@ -238,14 +238,14 @@ export class WarLogic {
         item.indexOf("_Drawing") === -1 &&
         item.indexOf("Player2") === -1
     );
-    // console.log(filtered);
+    console.log(filtered);
 
     const name = filtered[0] ?? null;
 
     // If player 2 hasnt played, lets make a new player name (default = "Opponent")
     if (!name) {
       this.playerId = "Opponent";
-      this.deck.transferDefaultToPlayerPile(this.playerId);
+      await this.deck.transferDefaultToPlayerPile(this.playerId);
     } else {
       this.playerId = name;
     }

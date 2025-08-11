@@ -16,12 +16,10 @@ function useWarGame(sessionId, playerId) {
       if (!gameRef.current) {
         gameRef.current = game;
       }
-      var reload = setInterval(() => { game.reload() }, 5000)
 
       setIsLoading(false);
     };
-    loadGame(); { }
-    //return () => { clearInterval(reload) }
+    loadGame();
   }, [sessionId, playerId]);
 
   useSyncExternalStore(
@@ -52,6 +50,16 @@ export function War() {
       navigator(`/war/${game?.deck?.sessionId}`, { replace: true });
   }, [game?.deck]);
 
+  useEffect(() => {
+    const reload = setInterval(() => {
+      game.reload();
+    }, REFRESH_RATE_MS);
+
+    return () => {
+      clearInterval(reload);
+    };
+  }, [game]);
+
   if (isLoading || !game.deck) {
     return <p className="text-white">Loading...</p>;
   }
@@ -70,7 +78,9 @@ export function War() {
         src="/back.png"
         alt="Back of Card"
         onClick={async () => {
-          if (game.state !== 'Computing') { await game.transition(game.playerId) };
+          if (game.state !== "Computing") {
+            await game.transition(game.playerId);
+          }
           // await game.switchPlayer();
           // if (game.state !== 'Computing'){await game.transition(game.playerId)};
           // await game.switchPlayer();
