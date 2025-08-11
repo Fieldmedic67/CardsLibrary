@@ -32,8 +32,8 @@ export default function ProfileForm() {
             alert("nice try guy")
         } else {
             setUserName(userInput);
-            localStorage.setItem('userName', JSON.stringify(userInput));
-            localStorage.setItem('userPicture', JSON.stringify(userPicture));
+            sessionStorage.setItem('userName', JSON.stringify(userInput));
+            sessionStorage.setItem('userPicture', JSON.stringify(userPicture));
             navigate('home');
         }
     }

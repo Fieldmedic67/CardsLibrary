@@ -16,10 +16,12 @@ function useWarGame(sessionId, playerId) {
       if (!gameRef.current) {
         gameRef.current = game;
       }
+      var reload = setInterval(() => { game.reload() }, 5000)
 
       setIsLoading(false);
     };
-    loadGame();
+    loadGame(); { }
+    return () => { clearInterval(reload) }
   }, [sessionId, playerId]);
 
   useSyncExternalStore(
@@ -35,8 +37,8 @@ function useWarGame(sessionId, playerId) {
 export function War() {
   const REFRESH_RATE_MS = 5000;
   const { sessionId } = useParams();
-  const myId = JSON.parse(localStorage.getItem("userName"));
-  const userPicture = JSON.parse(localStorage.getItem("userPicture"));
+  const myId = JSON.parse(sessionStorage.getItem("userName"));
+  const userPicture = JSON.parse(sessionStorage.getItem("userPicture"));
 
   const navigator = useNavigate();
 
@@ -68,10 +70,10 @@ export function War() {
         src="/back.png"
         alt="Back of Card"
         onClick={async () => {
-          if (game.state !== 'Computing'){await game.transition(game.playerId)};
-          await game.switchPlayer();
-          if (game.state !== 'Computing'){await game.transition(game.playerId)};
-          await game.switchPlayer();
+          if (game.state !== 'Computing') { await game.transition(game.playerId) };
+          // await game.switchPlayer();
+          // if (game.state !== 'Computing'){await game.transition(game.playerId)};
+          // await game.switchPlayer();
         }}
       />
       <button
