@@ -4,8 +4,17 @@ import '../CSS-sheets/ProfileHeader.css';
 
 export default function ProfileHeader(){
 
-    const userName = JSON.parse(sessionStorage.getItem('userName'))
-    const userPicture = JSON.parse(sessionStorage.getItem('userPicture'))
+
+    function handleUserNameChange(event){
+        event.preventDefault();
+        sessionStorage.setItem("userName", JSON.stringify(event.target[0].value));
+        setUserName(event.target[0].value);
+        setShowUserNameForm(false);
+    }
+
+
+    const userPicture = JSON.parse(sessionStorage.getItem("userPicture"))
+    const [userName, setUserName] = useState(JSON.parse(sessionStorage.getItem("userName")) || 'default');
 
     const [ showProfileMenu, setShowProfileMenu ] = useState(false);
     const [ showUserNameForm, setShowUserNameForm ] = useState(false);
@@ -31,7 +40,7 @@ export default function ProfileHeader(){
             {showUserNameForm && (
                 <div className="hidden-change-username">
                     <button className="return-button border-4 rounded-md hover:cursor-pointer"onClick={() => {setShowUserNameForm(false)}}>Return</button>
-                    <form className="change-username-form" onSubmit={(event) => console.log(event)}>
+                    <form className="change-username-form" onSubmit={(event) => handleUserNameChange(event)}>
                         <label>
                             Change Username
                             <input  type="text" className="border-2 ml-3"/>
@@ -44,9 +53,3 @@ export default function ProfileHeader(){
         </div>
     )
 }
-
-// function handleUserNameChange(event){
-//     event.preventDefault();
-//
-//     set
-// }
