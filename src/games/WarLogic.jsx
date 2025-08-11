@@ -1,38 +1,50 @@
 import { Deck } from "../util/Deck";
 
-const userName = JSON.parse(localStorage.getItem('userName'))
-const player1 = userName;
+
 
 export class WarLogic {
   deck;
   winnerOfBattle;
   playerId;
   opponentId;
-
+  playerPile;
+  opponentPile;
+  playerWarPile = 0;
+  opponentWarPile = 0;
   transitions = {
     PlayCard: {
       async transition() {
-        const playerPile = await this.deck.getPile(
-          this.deck.sessionId,
-          this.playerId + "_Drawing"
-        );
+        if (!this.playerPile) {
+          this.playerPile = (await this.deck.getPile(
+            this.deck.sessionId,
+            this.playerId + "_Drawing"
+          ))?.piles[this.playerId + "_Drawing"];
+        }
+        if (!this.opponentPile && this.opponentId) {
+          this.opponentPile = (await this.deck.getPile(
+            this.deck.sessionId,
+            this.opponentId + "_Drawing"
+          ))?.piles[this.opponentId + "_Drawing"];
+        }
 
         // console.log(playerPile);
 
-        let drawRemaining = 0;
-        if (playerPile.piles[this.playerId + "_Drawing"]) { drawRemaining = playerPile.piles[this.playerId + "_Drawing"].remaining }
-        // playerPile.piles[this.playerId + "_Drawing"].remaining ?? 0;
 
-        const opponentDrawRemaining = this.opponentId
-          ? playerPile.piles[this.opponentId + "_Drawing"].remaining
-          : 0;
 
-        const playerTurnDone = drawRemaining > 0;
-        const opponentTurnDone = opponentDrawRemaining > 0;
+        const playerTurnDone = (this.playerPile?.remaining ?? 0) > this.playerWarPile;
+
+        const opponentTurnDone = (this.opponentPile?.remaining ?? 0) > this.opponentWarPile;
 
         if (!playerTurnDone) {
-          // console.log(`Playing ${this.playerId}'s top card`);
-          await this.deck.drawCards(this.playerId);
+          if (this.winnerOfBattle === null) {
+            this.playerPile = await this.deck.drawCards(this.playerId, this.playerId + "_Drawing", 4);
+          }
+          else {
+            this.playerPile = await this.deck.drawCards(this.playerId)
+
+            // console.log(`Playing ${this.playerId}'s top card`);  
+          }
+
         }
 
         if (!opponentTurnDone) {
@@ -41,14 +53,18 @@ export class WarLogic {
             } to play a card`
           );
           return;
+        } else {
+          this.opponentPile = (await this.deck.getPile(this.deck.sessionId, this.opponentId + '_Drawing')).piles[this.opponentId + "_Drawing"]
+
+          //console.log(this.opponentId + '_Drawing')
         }
         this.state = 'Computing';
-        this.compareCards();
+        this.playerWarPile = this.playerPile.cards.length;
+        this.opponentWarPile = this.opponentPile.cards.length;
+        console.log("player:", this.playerPile.cards, "opponent:", this.opponentPile.cards)
+        this.compareCards(this.playerPile.cards[this.playerPile.cards.length - 1], this.opponentPile.cards[this.opponentPile.cards.length - 1]);
         if (this.winnerOfBattle) {
           await this.rewardWinner();
-        } else {
-          this.state = "WarPreparation";
-          return;
         }
 
         if (await this.gameIsDone() === true) {
@@ -73,26 +89,6 @@ export class WarLogic {
           alert(`${this.playerId} has won`)
         }
         return;
-      },
-    },
-    WarPreparation: {
-      transition() {
-        //wait for 4 cards to be added to each playing piles
-        //if both players have no cards
-        if (false) {
-          this.state = "GameOver";
-          return;
-        } else if (false) {
-          // if one player doesnt have the cards to go to war
-          this.state = "RewardWinner";
-          return;
-        }
-        this.state = "War";
-      },
-    },
-    War: {
-      transition() {
-        this.state = "CompareCards";
       },
     },
   };
@@ -120,10 +116,43 @@ export class WarLogic {
 
     return newGame;
   }
+  async reload() {
+    console.log("reloading Game")
+    // Get name of other player
+    // Get all piles first
+    const playerPile = await this.deck.getPile(
+      this.deck.sessionId,
+      this.playerId
+    );
+    const piles = Object.keys(playerPile.piles);
+    // console.log(piles);
 
+    // Remove current player and all drawing piles
+    const filtered = piles.filter(
+      (item) =>
+        item.indexOf(this.playerId) === -1 &&
+        item.indexOf("_Drawing") === -1 &&
+        item.indexOf("Player2") === -1
+    );
+    // console.log(filtered);
+
+    const name = filtered[0] ?? null;
+    if (!name) {
+      return
+    }
+    this.opponentId = name;
+    this.opponentPile = await (this.deck.getPile(this.deck.sessionId, this.opponentId + "_Drawing"));
+    if (!this.opponentPile) {
+      return
+    }
+    console.log(this.opponentPile)
+      this.opponentWarPile = this.opponentPile.cards.remaining;
+    this.emit();
+  }
   async switchPlayer() {
+    const tempWarPile = this.playerWarPile;
     const temp = this.playerId;
-
+    const tempPile = this.playerPile;
     // Get name of other player
     // Get all piles first
     const playerPile = await this.deck.getPile(
@@ -148,10 +177,12 @@ export class WarLogic {
     if (!name) {
       this.playerId = "Opponent";
       this.deck.transferDefaultToPlayerPile(this.playerId);
-    } else this.playerId = name;
-
+    } else { this.playerId = name };
+    this.playerPile = this.opponentPile;
+    this.playerWarPile = this.opponentWarPile;
     this.opponentId = temp;
-
+    this.opponentPile = tempPile;
+    this.opponentWarPile = tempWarPile;
     this.emit();
   }
 
@@ -166,25 +197,23 @@ export class WarLogic {
 
   getCardValue(card) {
     switch (card?.value) {
-      case "A":
+      case "ACE":
         return 14;
-      case "0":
-        return 10;
-      case "J":
+      case "JACK":
         return 11;
-      case "Q":
+      case "QUEEN":
         return 12;
-      case "K":
+      case "KING":
         return 13;
       default:
         return parseInt(card?.value);
     }
   }
-  compareCards() {
-    const player1Value = 10;
-    const player2Value = 9;
-    // const player1Value = this.getCardValue(player1Card);
-    // const player2Value = this.getCardValue(player2Card);
+  compareCards(player1Card, player2Card) {
+    // const player1Value = 10;
+    // const player2Value = 9;
+    const player1Value = this.getCardValue(player1Card);
+    const player2Value = this.getCardValue(player2Card);
     console.log(`Comparing ${player1Value} and ${player2Value}`)
     if (player1Value > player2Value) {
       this.winnerOfBattle = this.playerId;
@@ -197,9 +226,12 @@ export class WarLogic {
 
   async rewardWinner() {
     // add cards into winner's pile
-    const playerCards = await this.deck.drawCards(this.playerId + '_Drawing', this.winnerOfBattle, 1);
-    const oponentCards = await this.deck.drawCards(this.opponentId + '_Drawing', this.winnerOfBattle, 1);
-
+    const playerCards = await this.deck.drawCards(this.playerId + '_Drawing', this.winnerOfBattle, this.playerWarPile);
+    const oponentCards = await this.deck.drawCards(this.opponentId + '_Drawing', this.winnerOfBattle, this.opponentWarPile);
+    this.playerWarPile = 0;
+    this.opponentWarPile = 0;
+    this.playerPile = null;
+    this.opponentPile = null;
     console.log(`Rewarding ${this.winnerOfBattle}`)
   }
 
@@ -213,7 +245,7 @@ export class WarLogic {
   async transition(param) {
     const action = this.transitions[this.state]["transition"];
     if (action) {
-      console.log(action);
+      //console.log(action);
       await action.call(this, param);
       this.emit();
     } else {

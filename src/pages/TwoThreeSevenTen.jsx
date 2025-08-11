@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import "./TwoThreeSevenTen.css";
 import ProfileHeader from "./ProfileHeader.jsx";
 
@@ -84,31 +84,31 @@ const TwoThreeSevenTen = () => {
 
                 <div className="p1FaceDown"> {p1FaceDown.length > 0 && p1FaceDown.map((card, index) => (
                     <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`}
-                         onClick={() => Player1PlayFaceDown(index)}/>))}
+                        onClick={() => Player1PlayFaceDown(index)} />))}
                 </div>
                 <div className="p2FaceDown"> {p2FaceDown.length > 0 && p1FaceDown.map((card, index) => (
-                    <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`}/>))}
+                    <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`} />))}
                 </div>
                 <div className="p1FaceUp"> {p1FaceUp.length > 0 && p1FaceUp.map((card, index) => (
                     <img key={index} src={`https://deckofcardsapi.com/static/img/${card.code}.png`}
-                         onClick={() => Player1PlayFaceUp(index)}/>))}
+                        onClick={() => Player1PlayFaceUp(index)} />))}
                 </div>
                 <div className="p2FaceUp"> {p2FaceUp.length > 0 && p2FaceUp.map((card, index) => (
-                    <img key={index} src={`https://deckofcardsapi.com/static/img/${card.code}.png`}/>))}
+                    <img key={index} src={`https://deckofcardsapi.com/static/img/${card.code}.png`} />))}
                 </div>
                 <div className="p1Hand"> {p1Hand.length > 0 && p1Hand.map((card, index) => (
                     <img key={index} src={`https://deckofcardsapi.com/static/img/${card.code}.png`}
-                         onClick={() => Player1CardFromHand(index)}/>))}
+                        onClick={() => Player1CardFromHand(index)} />))}
                 </div>
                 <div className="p2Hand"> {p2Hand.length > 0 && p2Hand.map((card, index) => (
-                    <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`}/>))}
+                    <img key={index} src={`https://deckofcardsapi.com/static/img/back.png`} />))}
                 </div>
                 <div className="drawPile"> {drawPile.length > 0 && (
-                    <img src={`https://deckofcardsapi.com/static/img/back.png`}/>)}
+                    <img src={`https://deckofcardsapi.com/static/img/back.png`} />)}
                 </div>
                 <div className="discardPile"> {discardPile.length > 0 && (
                     <img
-                        src={`https://deckofcardsapi.com/static/img/${discardPile[discardPile.length - 1].code}.png`}/>)}
+                        src={`https://deckofcardsapi.com/static/img/${discardPile[discardPile.length - 1].code}.png`} />)}
                 </div>
             </div>
         </>
